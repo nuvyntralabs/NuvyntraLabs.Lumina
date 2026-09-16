@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/NuvyntraLabs.Lumina.Core/NuvyntraLabs.Lumina.Core.csproj" />
+    <Project Path="src/NuvyntraLabs.Lumina.Market/NuvyntraLabs.Lumina.Market.csproj" />
+    <Project Path="src/NuvyntraLabs.Lumina.Clinic/NuvyntraLabs.Lumina.Clinic.csproj" />
+    <Project Path="src/NuvyntraLabs.Lumina.Field/NuvyntraLabs.Lumina.Field.csproj" />
+    <Project Path="src/NuvyntraLabs.Lumina.Bank/NuvyntraLabs.Lumina.Bank.csproj" />
+    <Project Path="src/NuvyntraLabs.Lumina.Civic/NuvyntraLabs.Lumina.Civic.csproj" />
+  </Folder>
+</Solution>

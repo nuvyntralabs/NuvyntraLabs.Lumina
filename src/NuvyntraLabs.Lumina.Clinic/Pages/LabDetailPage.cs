@@ -1,0 +1,26 @@
+using NuvyntraLabs.Lumina.Core;
+using NuvyntraLabs.UIKit;
+
+namespace NuvyntraLabs.Lumina.Clinic;
+
+public sealed class LabDetailPage : LuminaPage
+{
+    public LabDetailPage(LabDetailViewModel vm) : base("LabDetail", "Nuvexa Clinic", "Lipid panel — 12 Sep 2026.")
+    {
+        ArgumentNullException.ThrowIfNull(vm);
+        BindingContext = vm;
+        var rows = ClinicSeed.Items.Where(x => x.Group == "LabDetail").ToList();
+        if (rows.Count == 0)
+        {
+            rows = ClinicSeed.Items.Take(3).ToList();
+        }
+
+        foreach (var row in rows)
+        {
+            AddCard(row.Title, row.Subtitle);
+        }
+
+        
+AddAction("VisitDetail", vm.OpenVisitDetailCommand, NVButtonVariant.Filled);        AddAction("Documents", vm.OpenDocumentsCommand, NVButtonVariant.Outline);
+    }
+}

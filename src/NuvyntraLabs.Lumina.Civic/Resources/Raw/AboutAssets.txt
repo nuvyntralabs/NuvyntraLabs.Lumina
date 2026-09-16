@@ -1,0 +1,1 @@
+Civic Pulse — Lumina prototype. Static seed in NuvexaDB.
