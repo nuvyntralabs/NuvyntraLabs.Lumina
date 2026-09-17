@@ -1,26 +1,24 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Market;
 
-public sealed class ForgotPasswordPage : LuminaPage
+public sealed class ForgotPasswordPage : ContentPage
 {
-    public ForgotPasswordPage(ForgotPasswordViewModel vm) : base("ForgotPassword", "Lumina Market", "Send a reset link to the inbox.")
+    public ForgotPasswordPage(ForgotPasswordViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = MarketSeed.Items.Where(x => x.Group == "ForgotPassword").ToList();
-        if (rows.Count == 0)
+        Title = "Forgot password";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = MarketUi.Auth(new MarketModel
         {
-            rows = MarketSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("ResetPassword", vm.OpenResetPasswordCommand, NVButtonVariant.Filled);        AddAction("SignIn", vm.OpenSignInCommand, NVButtonVariant.Outline);
+            Title = "Forgot password",
+            Subtitle = "Send a reset link to the inbox.",
+            Items = SeedRows.For(MarketSeed.Items, "ForgotPassword"),
+            Actions = [
+            new MarketNav("Save password", vm.OpenResetPasswordCommand, true),
+            new MarketNav("Sign in", vm.OpenSignInCommand, false)
+        ]
+        });
     }
 }

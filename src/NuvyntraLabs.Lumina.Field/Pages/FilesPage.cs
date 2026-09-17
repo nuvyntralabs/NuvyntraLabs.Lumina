@@ -1,26 +1,24 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Field;
 
-public sealed class FilesPage : LuminaPage
+public sealed class FilesPage : ContentPage
 {
-    public FilesPage(FilesViewModel vm) : base("Files", "Harbor Field", "Drawings on the device.")
+    public FilesPage(FilesViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = FieldSeed.Items.Where(x => x.Group == "Files").ToList();
-        if (rows.Count == 0)
+        Title = "Files";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = FieldUi.List(new FieldModel
         {
-            rows = FieldSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("AssetDetail", vm.OpenAssetDetailCommand, NVButtonVariant.Filled);
+            Title = "Files",
+            Subtitle = "Drawings on the device.",
+            Items = SeedRows.For(FieldSeed.Items, "Files"),
+            Kind = "files",
+            Actions = [
+            new FieldNav("Open asset", vm.OpenAssetDetailCommand, true)
+        ]
+        });
     }
 }

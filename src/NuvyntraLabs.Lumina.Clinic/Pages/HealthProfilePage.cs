@@ -1,28 +1,26 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Clinic;
 
-public sealed class HealthProfilePage : LuminaPage
+public sealed class HealthProfilePage : ContentPage
 {
-    public HealthProfilePage(HealthProfileViewModel vm) : base("HealthProfile", "Nuvexa Clinic", "Ada Lovelace · 36 · London.")
+    public HealthProfilePage(HealthProfileViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = ClinicSeed.Items.Where(x => x.Group == "HealthProfile").ToList();
-        if (rows.Count == 0)
+        Title = "Health profile";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = ClinicUi.Detail(new ClinicModel
         {
-            rows = ClinicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-        Root.Add(new NVGauge { Value = 72 });
-        Root.Add(new NVAvatar { Initials = "AL", StatusOn = true });
-
-        
-AddAction("Home", vm.OpenHomeCommand, NVButtonVariant.Filled);        AddAction("Vitals", vm.OpenVitalsCommand, NVButtonVariant.Outline);
+            Title = "Health profile",
+            Subtitle = "Ada Lovelace · 36 · London.",
+            Items = SeedRows.For(ClinicSeed.Items, "HealthProfile"),
+            Kind = "health",
+            Actions =
+            [
+                new ClinicNav("Continue", vm.OpenHomeCommand, true, "icon_home"),
+                new ClinicNav("Vitals", vm.OpenVitalsCommand, false, "icon_heart")
+            ]
+        });
     }
 }

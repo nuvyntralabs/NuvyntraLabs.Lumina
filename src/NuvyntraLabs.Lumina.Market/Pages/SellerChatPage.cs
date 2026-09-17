@@ -1,31 +1,23 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Market;
 
-public sealed class SellerChatPage : LuminaPage
+public sealed class SellerChatPage : ContentPage
 {
-    public SellerChatPage(SellerChatViewModel vm) : base("SellerChat", "Lumina Market", "Thread with Harbour Kitchen.")
+    public SellerChatPage(SellerChatViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = MarketSeed.Items.Where(x => x.Group == "SellerChat").ToList();
-        if (rows.Count == 0)
+        Title = "Seller chat";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = MarketUi.Chat(new MarketModel
         {
-            rows = MarketSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        Root.Add(new NVChat
-        {
-            Messages = rows.Select(r => new NVChatMessage { Author = r.Title, Text = r.Subtitle }).ToList()
+            Title = "Seller chat",
+            Subtitle = "Thread with Harbour Kitchen.",
+            Items = SeedRows.For(MarketSeed.Items, "SellerChat"),
+            Actions = [
+            new MarketNav("View order", vm.OpenOrderDetailCommand, true)
+        ]
         });
-
-        
-AddAction("OrderDetail", vm.OpenOrderDetailCommand, NVButtonVariant.Filled);
     }
 }

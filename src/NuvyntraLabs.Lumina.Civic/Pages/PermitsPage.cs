@@ -1,26 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Civic;
 
-public sealed class PermitsPage : LuminaPage
+public sealed class PermitsPage : ContentPage
 {
-    public PermitsPage(PermitsViewModel vm) : base("Permits", "Civic Pulse", "Paper the borough issued.")
+    public PermitsPage(PermitsViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = CivicSeed.Items.Where(x => x.Group == "Permits").ToList();
-        if (rows.Count == 0)
+        Title = "Permits";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = CivicUi.List(new CivicModel
         {
-            rows = CivicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("PermitDetail", vm.OpenPermitDetailCommand, NVButtonVariant.Filled);        AddAction("Services", vm.OpenServicesCommand, NVButtonVariant.Outline);
+            Title = "Permits",
+            Subtitle = "Paper the borough issued.",
+            Items = SeedRows.For(CivicSeed.Items, "Permits"),
+            Kind = "permits",
+            Actions = [
+            new CivicNav("Permit", vm.OpenPermitDetailCommand, true),
+            new CivicNav("Services", vm.OpenServicesCommand, false)
+        ]
+        });
     }
 }

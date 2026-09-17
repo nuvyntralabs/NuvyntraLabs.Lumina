@@ -19,6 +19,6 @@ public partial class InsuranceViewModel : PageViewModel
 
     [AsyncModelCommand]
     private Task OpenSettingsAsync(CancellationToken cancellationToken)
-        => Navigator!.NavigateToAsync<SettingsViewModel>(cancellationToken);
+        => Navigator!.ResetAsync<SettingsViewModel>(cancellationToken);
 
 }

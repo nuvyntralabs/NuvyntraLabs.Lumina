@@ -10,33 +10,40 @@ namespace NuvyntraLabs.Lumina.Civic;
 [Route("home")]
 public partial class HomeViewModel : PageViewModel
 {
-
     public HomeViewModel(INavigator navigator, IDialogs dialogs)
         : base(navigator, dialogs)
     {
-
     }
 
     [AsyncModelCommand]
+    private Task OpenHomeAsync(CancellationToken cancellationToken)
+        => Navigator!.ResetAsync<HomeViewModel>(cancellationToken);
+
+    [AsyncModelCommand]
     private Task OpenServicesAsync(CancellationToken cancellationToken)
-        => Navigator!.NavigateToAsync<ServicesViewModel>(cancellationToken);
+        => Navigator!.ResetAsync<ServicesViewModel>(cancellationToken);
+
     [AsyncModelCommand]
     private Task OpenTransitAsync(CancellationToken cancellationToken)
-        => Navigator!.NavigateToAsync<TransitViewModel>(cancellationToken);
+        => Navigator!.ResetAsync<TransitViewModel>(cancellationToken);
+
+    [AsyncModelCommand]
+    private Task OpenWalletAsync(CancellationToken cancellationToken)
+        => Navigator!.ResetAsync<WalletViewModel>(cancellationToken);
+
+    [AsyncModelCommand]
+    private Task OpenSettingsAsync(CancellationToken cancellationToken)
+        => Navigator!.ResetAsync<SettingsViewModel>(cancellationToken);
+
     [AsyncModelCommand]
     private Task OpenEventsAsync(CancellationToken cancellationToken)
         => Navigator!.NavigateToAsync<EventsViewModel>(cancellationToken);
+
     [AsyncModelCommand]
     private Task OpenNewsAsync(CancellationToken cancellationToken)
         => Navigator!.NavigateToAsync<NewsViewModel>(cancellationToken);
-    [AsyncModelCommand]
-    private Task OpenWalletAsync(CancellationToken cancellationToken)
-        => Navigator!.NavigateToAsync<WalletViewModel>(cancellationToken);
+
     [AsyncModelCommand]
     private Task OpenNotificationsAsync(CancellationToken cancellationToken)
         => Navigator!.NavigateToAsync<NotificationsViewModel>(cancellationToken);
-    [AsyncModelCommand]
-    private Task OpenSettingsAsync(CancellationToken cancellationToken)
-        => Navigator!.NavigateToAsync<SettingsViewModel>(cancellationToken);
-
 }

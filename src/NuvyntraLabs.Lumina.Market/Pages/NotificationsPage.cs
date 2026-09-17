@@ -1,26 +1,24 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Market;
 
-public sealed class NotificationsPage : LuminaPage
+public sealed class NotificationsPage : ContentPage
 {
-    public NotificationsPage(NotificationsViewModel vm) : base("Notifications", "Lumina Market", "Pushes you would have felt.")
+    public NotificationsPage(NotificationsViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = MarketSeed.Items.Where(x => x.Group == "Notifications").ToList();
-        if (rows.Count == 0)
+        Title = "Notifications";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = MarketUi.List(new MarketModel
         {
-            rows = MarketSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Orders", vm.OpenOrdersCommand, NVButtonVariant.Filled);        AddAction("Tracking", vm.OpenTrackingCommand, NVButtonVariant.Outline);
+            Title = "Notifications",
+            Subtitle = "Pushes you would have felt.",
+            Items = SeedRows.For(MarketSeed.Items, "Notifications"),
+            Actions = [
+            new MarketNav("Orders", vm.OpenOrdersCommand, true),
+            new MarketNav("Track order", vm.OpenTrackingCommand, false)
+        ]
+        });
     }
 }

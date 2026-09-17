@@ -10,7 +10,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <MauiXamlInflator>SourceGen</MauiXamlInflator>
-    <ApplicationTitle>Harbor Field</ApplicationTitle>
+    <ApplicationTitle>Harbour Fields</ApplicationTitle>
     <ApplicationId>com.nuvyntralabs.lumina.field</ApplicationId>
     <ApplicationDisplayVersion>1.0.0</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
@@ -22,8 +22,9 @@
     <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
   </PropertyGroup>
   <ItemGroup>
-    <MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#C4841D" />
-    <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#F6F1E8" BaseSize="128,128" />
+    <MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#1B3A4B" />
+    <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#1B3A4B" BaseSize="128,128" />
+    <MauiImage Include="Resources\Images\*" />
     <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
   <ItemGroup>

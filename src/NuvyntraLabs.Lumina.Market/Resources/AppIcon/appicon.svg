@@ -1,4 +1,5 @@
 <svg width="456" height="456" viewBox="0 0 456 456" xmlns="http://www.w3.org/2000/svg">
-  <rect width="456" height="456" rx="96" fill="#1FA87A"/>
-  <text x="228" y="280" text-anchor="middle" font-size="180" font-family="sans-serif" fill="#FFFCF7">M</text>
+  <rect width="456" height="456" rx="96" fill="#1A4FA0"/>
+  <path fill="#2874F0" d="M118 168h220l28 88H90l28-88Zm-20 108h260v128c0 16-12 28-28 28H126c-16 0-28-12-28-28V276Z"/>
+  <rect x="168" y="196" width="120" height="28" rx="8" fill="#FFD54F"/>
 </svg>

@@ -1,26 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Clinic;
 
-public sealed class DocumentsPage : LuminaPage
+public sealed class DocumentsPage : ContentPage
 {
-    public DocumentsPage(DocumentsViewModel vm) : base("Documents", "Nuvexa Clinic", "Letters and PDFs.")
+    public DocumentsPage(DocumentsViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = ClinicSeed.Items.Where(x => x.Group == "Documents").ToList();
-        if (rows.Count == 0)
+        Title = "Documents";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = ClinicUi.List(new ClinicModel
         {
-            rows = ClinicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("VisitDetail", vm.OpenVisitDetailCommand, NVButtonVariant.Filled);
+            Title = "Documents",
+            Subtitle = "Letters and PDFs.",
+            Items = SeedRows.For(ClinicSeed.Items, "Documents"),
+            Kind = "documents",
+            Actions =
+            [
+                new ClinicNav("Visit", vm.OpenVisitDetailCommand, true, "icon_clinic")
+            ]
+        });
     }
 }

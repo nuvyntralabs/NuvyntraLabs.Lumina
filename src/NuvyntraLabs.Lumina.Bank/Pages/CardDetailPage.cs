@@ -1,26 +1,26 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Bank;
 
-public sealed class CardDetailPage : LuminaPage
+public sealed class CardDetailPage : ContentPage
 {
-    public CardDetailPage(CardDetailViewModel vm) : base("CardDetail", "Aether Bank", "Aurora debit ··4418.")
+    public CardDetailPage(CardDetailViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = BankSeed.Items.Where(x => x.Group == "CardDetail").ToList();
-        if (rows.Count == 0)
+        Title = "Aurora debit";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = BankUi.Detail(new BankModel
         {
-            rows = BankSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Cards", vm.OpenCardsCommand, NVButtonVariant.Filled);        AddAction("AppLock", vm.OpenAppLockCommand, NVButtonVariant.Outline);
+            Title = "Aurora debit",
+            Subtitle = "Physical + tokenised  ··4418",
+            Items = SeedRows.For(BankSeed.Items, "CardDetail"),
+            Kind = "card",
+            Actions =
+            [
+                new BankNav("Back to cards", vm.OpenCardsCommand, true, "icon_card"),
+                new BankNav("Lock the app", vm.OpenAppLockCommand, false, "icon_shield")
+            ]
+        });
     }
 }

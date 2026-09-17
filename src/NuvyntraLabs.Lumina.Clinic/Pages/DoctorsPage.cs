@@ -1,26 +1,29 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Clinic;
 
-public sealed class DoctorsPage : LuminaPage
+public sealed class DoctorsPage : ContentPage
 {
-    public DoctorsPage(DoctorsViewModel vm) : base("Doctors", "Nuvexa Clinic", "Directory.")
+    public DoctorsPage(DoctorsViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = ClinicSeed.Items.Where(x => x.Group == "Doctors").ToList();
-        if (rows.Count == 0)
+        Title = "Doctors near you";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = ClinicUi.Doctors(new ClinicModel
         {
-            rows = ClinicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("DoctorProfile", vm.OpenDoctorProfileCommand, NVButtonVariant.Filled);        AddAction("Booking", vm.OpenBookingCommand, NVButtonVariant.Outline);
+            Title = "Doctors near you",
+            Subtitle = "Directory.",
+            Items = SeedRows.For(ClinicSeed.Items, "Doctors"),
+            Kind = "doctors",
+            SelectedTab = "Doctors",
+            Tabs = ClinicTheme.Tabs(vm.OpenHomeCommand, null, vm.OpenAppointmentsCommand, vm.OpenRecordsCommand, vm.OpenSettingsCommand),
+            Actions =
+            [
+                new ClinicNav("Doctor", vm.OpenDoctorProfileCommand, true, "icon_doctor"),
+                new ClinicNav("Booking", vm.OpenBookingCommand, false, "icon_calendar"),
+                new ClinicNav("Video", vm.OpenInCallCommand, false, "icon_video")
+            ]
+        });
     }
 }

@@ -1,26 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Bank;
 
-public sealed class KycPage : LuminaPage
+public sealed class KycPage : ContentPage
 {
-    public KycPage(KycViewModel vm) : base("Kyc", "Aether Bank", "Refresh your file.")
+    public KycPage(KycViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = BankSeed.Items.Where(x => x.Group == "Kyc").ToList();
-        if (rows.Count == 0)
+        Title = "Verify";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = BankUi.Form(new BankModel
         {
-            rows = BankSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Settings", vm.OpenSettingsCommand, NVButtonVariant.Filled);
+            Title = "Verify",
+            Subtitle = "Refresh your file so we can keep Premier.",
+            Items = SeedRows.For(BankSeed.Items, "Kyc"),
+            Kind = "kyc",
+            Actions =
+            [
+                new BankNav("Save and return", vm.OpenSettingsCommand, true, "icon_kyc")
+            ]
+        });
     }
 }

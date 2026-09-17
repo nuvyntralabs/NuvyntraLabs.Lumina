@@ -1,26 +1,24 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Clinic;
 
-public sealed class InvoicePage : LuminaPage
+public sealed class InvoicePage : ContentPage
 {
-    public InvoicePage(InvoiceViewModel vm) : base("Invoice", "Nuvexa Clinic", "Visit 12 Sep.")
+    public InvoicePage(InvoiceViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = ClinicSeed.Items.Where(x => x.Group == "Invoice").ToList();
-        if (rows.Count == 0)
+        Title = "Invoice";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = ClinicUi.List(new ClinicModel
         {
-            rows = ClinicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("VisitDetail", vm.OpenVisitDetailCommand, NVButtonVariant.Filled);
+            Title = "Invoice",
+            Subtitle = "Visit 12 Sep.",
+            Items = SeedRows.For(ClinicSeed.Items, "Invoice"),
+            Kind = "invoice",
+            Actions = [
+            new ClinicNav("Visit", vm.OpenVisitDetailCommand, true)
+        ]
+        });
     }
 }

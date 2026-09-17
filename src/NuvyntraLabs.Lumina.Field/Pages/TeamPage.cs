@@ -1,31 +1,24 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Field;
 
-public sealed class TeamPage : LuminaPage
+public sealed class TeamPage : ContentPage
 {
-    public TeamPage(TeamViewModel vm) : base("Team", "Harbor Field", "Crew 4 thread.")
+    public TeamPage(TeamViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = FieldSeed.Items.Where(x => x.Group == "Team").ToList();
-        if (rows.Count == 0)
+        Title = "Team";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = FieldUi.List(new FieldModel
         {
-            rows = FieldSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        Root.Add(new NVChat
-        {
-            Messages = rows.Select(r => new NVChatMessage { Author = r.Title, Text = r.Subtitle }).ToList()
+            Title = "Team",
+            Subtitle = "Crew 4 thread.",
+            Items = SeedRows.For(FieldSeed.Items, "Team"),
+            Kind = "team",
+            Actions = [
+            new FieldNav("Job", vm.OpenJobDetailCommand, true)
+        ]
         });
-
-        
-AddAction("JobDetail", vm.OpenJobDetailCommand, NVButtonVariant.Filled);
     }
 }

@@ -1,26 +1,30 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Market;
 
-public sealed class CatalogPage : LuminaPage
+public sealed class CatalogPage : ContentPage
 {
-    public CatalogPage(CatalogViewModel vm) : base("Catalog", "Lumina Market", "Tile grid of this week's drop.")
+    public CatalogPage(CatalogViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = MarketSeed.Items.Where(x => x.Group == "Catalog").ToList();
-        if (rows.Count == 0)
+        Title = "Shop";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = MarketUi.Catalog(new MarketModel
         {
-            rows = MarketSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("ProductDetail", vm.OpenProductDetailCommand, NVButtonVariant.Filled);        AddAction("Filters", vm.OpenFiltersCommand, NVButtonVariant.Outline);        AddAction("Compare", vm.OpenCompareCommand, NVButtonVariant.Outline);
+            Title = "Shop",
+            Subtitle = "Tile grid of this week's drop.",
+            Items = SeedRows.For(MarketSeed.Items, "Catalog"),
+            Kind = "shop",
+            SelectedTab = "Shop",
+            Tabs = MarketTheme.Tabs(vm.OpenHomeCommand, null, vm.OpenCartCommand, vm.OpenOrdersCommand, vm.OpenSettingsCommand),
+            Actions =
+            [
+                new MarketNav("View item", vm.OpenProductDetailCommand, true, "icon_shop"),
+                new MarketNav("Filters", vm.OpenFiltersCommand, false, "icon_filter"),
+                new MarketNav("Compare", vm.OpenCompareCommand, false, "icon_shop"),
+                new MarketNav("Search", vm.OpenSearchCommand, false, "icon_search")
+            ]
+        });
     }
 }

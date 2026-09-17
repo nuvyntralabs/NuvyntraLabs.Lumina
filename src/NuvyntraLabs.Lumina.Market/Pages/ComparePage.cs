@@ -1,26 +1,24 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Market;
 
-public sealed class ComparePage : LuminaPage
+public sealed class ComparePage : ContentPage
 {
-    public ComparePage(CompareViewModel vm) : base("Compare", "Lumina Market", "Chair vs chair.")
+    public ComparePage(CompareViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = MarketSeed.Items.Where(x => x.Group == "Compare").ToList();
-        if (rows.Count == 0)
+        Title = "Compare";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = MarketUi.Product(new MarketModel
         {
-            rows = MarketSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("ProductDetail", vm.OpenProductDetailCommand, NVButtonVariant.Filled);        AddAction("Cart", vm.OpenCartCommand, NVButtonVariant.Outline);
+            Title = "Compare",
+            Subtitle = "Chair vs chair.",
+            Items = SeedRows.For(MarketSeed.Items, "Compare"),
+            Actions = [
+            new MarketNav("View item", vm.OpenProductDetailCommand, true),
+            new MarketNav("Cart", vm.OpenCartCommand, false)
+        ]
+        });
     }
 }

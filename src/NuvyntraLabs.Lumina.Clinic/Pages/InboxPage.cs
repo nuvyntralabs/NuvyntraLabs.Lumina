@@ -1,26 +1,26 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Clinic;
 
-public sealed class InboxPage : LuminaPage
+public sealed class InboxPage : ContentPage
 {
-    public InboxPage(InboxViewModel vm) : base("Inbox", "Nuvexa Clinic", "Care threads.")
+    public InboxPage(InboxViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = ClinicSeed.Items.Where(x => x.Group == "Inbox").ToList();
-        if (rows.Count == 0)
+        Title = "Messages";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = ClinicUi.Inbox(new ClinicModel
         {
-            rows = ClinicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Conversation", vm.OpenConversationCommand, NVButtonVariant.Filled);        AddAction("InCall", vm.OpenInCallCommand, NVButtonVariant.Outline);
+            Title = "Messages",
+            Subtitle = "Care threads.",
+            Items = SeedRows.For(ClinicSeed.Items, "Inbox"),
+            Kind = "inbox",
+            Actions =
+            [
+                new ClinicNav("Open thread", vm.OpenConversationCommand, true, "icon_chat"),
+                new ClinicNav("Join call", vm.OpenInCallCommand, false, "icon_video")
+            ]
+        });
     }
 }

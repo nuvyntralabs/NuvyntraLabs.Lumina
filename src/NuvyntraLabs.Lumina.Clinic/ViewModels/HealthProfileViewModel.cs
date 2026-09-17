@@ -19,7 +19,7 @@ public partial class HealthProfileViewModel : PageViewModel
 
     [AsyncModelCommand]
     private Task OpenHomeAsync(CancellationToken cancellationToken)
-        => Navigator!.NavigateToAsync<HomeViewModel>(cancellationToken);
+        => Navigator!.ResetAsync<HomeViewModel>(cancellationToken);
     [AsyncModelCommand]
     private Task OpenVitalsAsync(CancellationToken cancellationToken)
         => Navigator!.NavigateToAsync<VitalsViewModel>(cancellationToken);

@@ -1,26 +1,23 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Market;
 
-public sealed class SavedCardsPage : LuminaPage
+public sealed class SavedCardsPage : ContentPage
 {
-    public SavedCardsPage(SavedCardsViewModel vm) : base("SavedCards", "Lumina Market", "Instruments on file.")
+    public SavedCardsPage(SavedCardsViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = MarketSeed.Items.Where(x => x.Group == "SavedCards").ToList();
-        if (rows.Count == 0)
+        Title = "Saved cards";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = MarketUi.Form(new MarketModel
         {
-            rows = MarketSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("CardPayment", vm.OpenCardPaymentCommand, NVButtonVariant.Filled);
+            Title = "Saved cards",
+            Subtitle = "Instruments on file.",
+            Items = SeedRows.For(MarketSeed.Items, "SavedCards"),
+            Actions = [
+            new MarketNav("Pay now", vm.OpenCardPaymentCommand, true)
+        ]
+        });
     }
 }

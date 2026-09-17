@@ -1,26 +1,26 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Bank;
 
-public sealed class NotificationsPage : LuminaPage
+public sealed class NotificationsPage : ContentPage
 {
-    public NotificationsPage(NotificationsViewModel vm) : base("Notifications", "Aether Bank", "Money moving.")
+    public NotificationsPage(NotificationsViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = BankSeed.Items.Where(x => x.Group == "Notifications").ToList();
-        if (rows.Count == 0)
+        Title = "Alerts";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = BankUi.List(new BankModel
         {
-            rows = BankSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Accounts", vm.OpenAccountsCommand, NVButtonVariant.Filled);        AddAction("Cards", vm.OpenCardsCommand, NVButtonVariant.Outline);
+            Title = "Alerts",
+            Subtitle = "Money moving on your books.",
+            Items = SeedRows.For(BankSeed.Items, "Notifications"),
+            Kind = "notifications",
+            Actions =
+            [
+                new BankNav("Accounts", vm.OpenAccountsCommand, true, "icon_wallet"),
+                new BankNav("Cards", vm.OpenCardsCommand, false, "icon_card")
+            ]
+        });
     }
 }

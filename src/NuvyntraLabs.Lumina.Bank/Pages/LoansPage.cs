@@ -1,26 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Bank;
 
-public sealed class LoansPage : LuminaPage
+public sealed class LoansPage : ContentPage
 {
-    public LoansPage(LoansViewModel vm) : base("Loans", "Aether Bank", "Open credit.")
+    public LoansPage(LoansViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = BankSeed.Items.Where(x => x.Group == "Loans").ToList();
-        if (rows.Count == 0)
+        Title = "Credit";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = BankUi.List(new BankModel
         {
-            rows = BankSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("LoanDetail", vm.OpenLoanDetailCommand, NVButtonVariant.Filled);
+            Title = "Credit",
+            Subtitle = "Loans and unused overdraft.",
+            Items = SeedRows.For(BankSeed.Items, "Loans"),
+            Kind = "loans",
+            Actions =
+            [
+                new BankNav("Open facility", vm.OpenLoanDetailCommand, true, "icon_loan")
+            ]
+        });
     }
 }

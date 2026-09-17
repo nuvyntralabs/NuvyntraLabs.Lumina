@@ -1,26 +1,24 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Clinic;
 
-public sealed class MedicationsPage : LuminaPage
+public sealed class MedicationsPage : ContentPage
 {
-    public MedicationsPage(MedicationsViewModel vm) : base("Medications", "Nuvexa Clinic", "Today's box.")
+    public MedicationsPage(MedicationsViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = ClinicSeed.Items.Where(x => x.Group == "Medications").ToList();
-        if (rows.Count == 0)
+        Title = "Medications";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = ClinicUi.List(new ClinicModel
         {
-            rows = ClinicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Prescriptions", vm.OpenPrescriptionsCommand, NVButtonVariant.Filled);
+            Title = "Medications",
+            Subtitle = "Today's box.",
+            Items = SeedRows.For(ClinicSeed.Items, "Medications"),
+            Kind = "medications",
+            Actions = [
+            new ClinicNav("Prescriptions", vm.OpenPrescriptionsCommand, true)
+        ]
+        });
     }
 }

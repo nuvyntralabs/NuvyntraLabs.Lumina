@@ -1,28 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Field;
 
-public sealed class SignInPage : LuminaPage
+public sealed class SignInPage : ContentPage
 {
-    public SignInPage(SignInViewModel vm) : base("SignIn", "Harbor Field", "Crew gate. PIN on the van tablet.")
+    public SignInPage(SignInViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = FieldSeed.Items.Where(x => x.Group == "SignIn").ToList();
-        if (rows.Count == 0)
+        Title = "Welcome back";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = FieldUi.Auth(new FieldModel
         {
-            rows = FieldSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-Root.Add(new NVTextField { Label = "Email" });
-        Root.Add(new NVTextField { Label = "Password", IsPassword = true });
-        AddAction("Sign in", vm.SignInCommand);        AddAction("Continue", vm.OpenHomeCommand, NVButtonVariant.Filled);
+            Title = "Welcome back",
+            Subtitle = "Crew gate. PIN on the van tablet.",
+            Items = SeedRows.For(FieldSeed.Items, "SignIn"),
+            Actions =
+            [
+                new FieldNav("Sign in", vm.SignInCommand, true),
+                new FieldNav("Continue as Nia", vm.OpenHomeCommand, false)
+            ]
+        });
     }
 }

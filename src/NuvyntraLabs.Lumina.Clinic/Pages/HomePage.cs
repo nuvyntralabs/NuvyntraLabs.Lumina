@@ -1,44 +1,34 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Clinic;
 
-public sealed class HomePage : LuminaPage
+public sealed class HomePage : ContentPage
 {
-    public HomePage(HomeViewModel vm) : base("Home", "Nuvexa Clinic", "Today at Nuvexa Clinic.")
+    public HomePage(HomeViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = ClinicSeed.Items.Where(x => x.Group == "Home").ToList();
-        if (rows.Count == 0)
+        Title = "Home";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = ClinicUi.Home(new ClinicModel
         {
-            rows = ClinicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        Root.Add(new NVChart
-        {
-            Series =
+            Title = "Home",
+            Subtitle = "Today at Nuvexa Clinic.",
+            Items = SeedRows.For(ClinicSeed.Items, "Home"),
+            SelectedTab = "Home",
+            Tabs = ClinicTheme.Tabs(vm.OpenHomeCommand, vm.OpenDoctorsCommand, vm.OpenAppointmentsCommand, vm.OpenRecordsCommand, vm.OpenSettingsCommand),
+            Actions =
             [
-                new NVChartSeries
-                {
-                    Title = "This week",
-                    Kind = NVChartSeriesKind.Bar,
-                    Points =
-                    [
-                        new NVChartPoint { Category = "Mon", Value = 4 },
-                        new NVChartPoint { Category = "Wed", Value = 7 },
-                        new NVChartPoint { Category = "Fri", Value = 5 }
-                    ]
-                }
+                new ClinicNav("Doctors", vm.OpenDoctorsCommand, false, "icon_doctor"),
+                new ClinicNav("Visits", vm.OpenAppointmentsCommand, true, "icon_calendar"),
+                new ClinicNav("Pharmacy", vm.OpenPharmacyCommand, false, "icon_pill"),
+                new ClinicNav("Labs", vm.OpenRecordsCommand, false, "icon_lab"),
+                new ClinicNav("Video consult", vm.OpenInCallCommand, false, "icon_video"),
+                new ClinicNav("Inbox", vm.OpenInboxCommand, false, "icon_chat"),
+                new ClinicNav("Alerts", vm.OpenNotificationsCommand, false, "icon_bell"),
+                new ClinicNav("Booking", vm.OpenBookingCommand, false, "icon_calendar"),
+                new ClinicNav("You", vm.OpenSettingsCommand, false, "icon_user")
             ]
         });
-
-        
-AddAction("Appointments", vm.OpenAppointmentsCommand, NVButtonVariant.Filled);        AddAction("Doctors", vm.OpenDoctorsCommand, NVButtonVariant.Outline);        AddAction("Pharmacy", vm.OpenPharmacyCommand, NVButtonVariant.Outline);        AddAction("LabResults", vm.OpenLabResultsCommand, NVButtonVariant.Outline);        AddAction("Inbox", vm.OpenInboxCommand, NVButtonVariant.Outline);        AddAction("Notifications", vm.OpenNotificationsCommand, NVButtonVariant.Outline);        AddAction("Settings", vm.OpenSettingsCommand, NVButtonVariant.Outline);
     }
 }

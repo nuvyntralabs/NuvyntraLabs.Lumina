@@ -1,26 +1,24 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Market;
 
-public sealed class CheckoutPage : LuminaPage
+public sealed class CheckoutPage : ContentPage
 {
-    public CheckoutPage(CheckoutViewModel vm) : base("Checkout", "Lumina Market", "Address plus slot.")
+    public CheckoutPage(CheckoutViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = MarketSeed.Items.Where(x => x.Group == "Checkout").ToList();
-        if (rows.Count == 0)
+        Title = "Checkout";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = MarketUi.Form(new MarketModel
         {
-            rows = MarketSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("CardPayment", vm.OpenCardPaymentCommand, NVButtonVariant.Filled);        AddAction("Addresses", vm.OpenAddressesCommand, NVButtonVariant.Outline);
+            Title = "Checkout",
+            Subtitle = "Address plus slot.",
+            Items = SeedRows.For(MarketSeed.Items, "Checkout"),
+            Actions = [
+            new MarketNav("Pay now", vm.OpenCardPaymentCommand, true),
+            new MarketNav("Change address", vm.OpenAddressesCommand, false)
+        ]
+        });
     }
 }

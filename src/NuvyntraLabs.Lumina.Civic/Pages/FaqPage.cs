@@ -1,26 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Civic;
 
-public sealed class FaqPage : LuminaPage
+public sealed class FaqPage : ContentPage
 {
-    public FaqPage(FaqViewModel vm) : base("FAQ", "Civic Pulse", "What residents ask.")
+    public FaqPage(FaqViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = CivicSeed.Items.Where(x => x.Group == "Faq").ToList();
-        if (rows.Count == 0)
+        Title = "Faq";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = CivicUi.List(new CivicModel
         {
-            rows = CivicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Help", vm.OpenHelpCommand, NVButtonVariant.Filled);
+            Title = "Faq",
+            Subtitle = "What residents ask.",
+            Items = SeedRows.For(CivicSeed.Items, "Faq"),
+            Kind = "faq",
+            Actions =
+            [
+                new CivicNav("Help", vm.OpenHelpCommand, true, "icon_help")
+            ]
+        });
     }
 }

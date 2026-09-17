@@ -1,26 +1,28 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Field;
 
-public sealed class OfflineQueuePage : LuminaPage
+public sealed class OfflineQueuePage : ContentPage
 {
-    public OfflineQueuePage(OfflineQueueViewModel vm) : base("OfflineQueue", "Harbor Field", "Waiting for real internet.")
+    public OfflineQueuePage(OfflineQueueViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = FieldSeed.Items.Where(x => x.Group == "OfflineQueue").ToList();
-        if (rows.Count == 0)
+        Title = "Queue";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = FieldUi.Queue(new FieldModel
         {
-            rows = FieldSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Conflicts", vm.OpenConflictsCommand, NVButtonVariant.Filled);        AddAction("Evidence", vm.OpenEvidenceCommand, NVButtonVariant.Outline);
+            Title = "Queue",
+            Subtitle = "Waiting for real internet.",
+            Items = SeedRows.For(FieldSeed.Items, "OfflineQueue"),
+            Kind = "queue",
+            SelectedTab = "Queue",
+            Tabs = FieldTheme.Tabs(vm.OpenHomeCommand, vm.OpenJobsCommand, vm.OpenAssetsCommand, null, vm.OpenSettingsCommand),
+            Actions =
+            [
+                new FieldNav("Conflicts", vm.OpenConflictsCommand, true, "icon_conflict"),
+                new FieldNav("Evidence", vm.OpenEvidenceCommand, false, "icon_camera")
+            ]
+        });
     }
 }

@@ -1,26 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Field;
 
-public sealed class ReceiptPage : LuminaPage
+public sealed class ReceiptPage : ContentPage
 {
-    public ReceiptPage(ReceiptViewModel vm) : base("Receipt", "Harbor Field", "Job ticket HF-204.")
+    public ReceiptPage(ReceiptViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = FieldSeed.Items.Where(x => x.Group == "Receipt").ToList();
-        if (rows.Count == 0)
+        Title = "Receipt";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = FieldUi.List(new FieldModel
         {
-            rows = FieldSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Printers", vm.OpenPrintersCommand, NVButtonVariant.Filled);        AddAction("JobDetail", vm.OpenJobDetailCommand, NVButtonVariant.Outline);
+            Title = "Receipt",
+            Subtitle = "Job ticket HF-204.",
+            Items = SeedRows.For(FieldSeed.Items, "Receipt"),
+            Kind = "receipt",
+            Actions = [
+            new FieldNav("Printers", vm.OpenPrintersCommand, true),
+            new FieldNav("Job", vm.OpenJobDetailCommand, false)
+        ]
+        });
     }
 }

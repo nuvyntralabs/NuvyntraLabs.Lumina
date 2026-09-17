@@ -1,28 +1,26 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Clinic;
 
-public sealed class SignInPage : LuminaPage
+public sealed class SignInPage : ContentPage
 {
-    public SignInPage(SignInViewModel vm) : base("SignIn", "Nuvexa Clinic", "Patients and clinicians.")
+    public SignInPage(SignInViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = ClinicSeed.Items.Where(x => x.Group == "SignIn").ToList();
-        if (rows.Count == 0)
+        Title = "Welcome back";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = ClinicUi.Auth(new ClinicModel
         {
-            rows = ClinicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-Root.Add(new NVTextField { Label = "Email" });
-        Root.Add(new NVTextField { Label = "Password", IsPassword = true });
-        AddAction("Sign in", vm.SignInCommand);        AddAction("Continue", vm.OpenHomeCommand, NVButtonVariant.Filled);        AddAction("HealthProfile", vm.OpenHealthProfileCommand, NVButtonVariant.Outline);
+            Title = "Welcome back",
+            Subtitle = "Patients and clinicians use the same gate.",
+            Items = SeedRows.For(ClinicSeed.Items, "SignIn"),
+            Actions =
+            [
+                new ClinicNav("Continue", vm.SignInCommand, true),
+                new ClinicNav("Skip to home", vm.OpenHomeCommand, false),
+                new ClinicNav("Health profile", vm.OpenHealthProfileCommand, false)
+            ]
+        });
     }
 }

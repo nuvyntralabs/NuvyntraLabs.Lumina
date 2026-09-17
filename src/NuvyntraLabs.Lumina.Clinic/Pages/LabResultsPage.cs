@@ -1,26 +1,31 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Clinic;
 
-public sealed class LabResultsPage : LuminaPage
+public sealed class LabResultsPage : ContentPage
 {
-    public LabResultsPage(LabResultsViewModel vm) : base("LabResults", "Nuvexa Clinic", "Panels in the last year.")
+    public LabResultsPage(LabResultsViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = ClinicSeed.Items.Where(x => x.Group == "LabResults").ToList();
-        if (rows.Count == 0)
+        Title = "Records";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = ClinicUi.Records(new ClinicModel
         {
-            rows = ClinicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("LabDetail", vm.OpenLabDetailCommand, NVButtonVariant.Filled);
+            Title = "Records",
+            Subtitle = "Labs, scripts, and letters.",
+            Items = SeedRows.For(ClinicSeed.Items, "LabResults"),
+            Kind = "records",
+            SelectedTab = "Records",
+            Tabs = ClinicTheme.Tabs(vm.OpenHomeCommand, vm.OpenDoctorsCommand, vm.OpenAppointmentsCommand, null, vm.OpenSettingsCommand),
+            Actions =
+            [
+                new ClinicNav("Lab", vm.OpenLabDetailCommand, true, "icon_lab"),
+                new ClinicNav("Prescriptions", vm.OpenPrescriptionsCommand, false, "icon_pill"),
+                new ClinicNav("Documents", vm.OpenDocumentsCommand, false, "icon_doc"),
+                new ClinicNav("Pharmacy", vm.OpenPharmacyCommand, false, "icon_clinic"),
+                new ClinicNav("Medications", vm.OpenMedicationsCommand, false, "icon_pill")
+            ]
+        });
     }
 }

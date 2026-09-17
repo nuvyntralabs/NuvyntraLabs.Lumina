@@ -1,27 +1,26 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Clinic;
 
-public sealed class BookingPage : LuminaPage
+public sealed class BookingPage : ContentPage
 {
-    public BookingPage(BookingViewModel vm) : base("Booking", "Nuvexa Clinic", "Pick a slot on the calendar.")
+    public BookingPage(BookingViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = ClinicSeed.Items.Where(x => x.Group == "Booking").ToList();
-        if (rows.Count == 0)
+        Title = "Book appointment";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = ClinicUi.Booking(new ClinicModel
         {
-            rows = ClinicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-        Root.Add(new NVCalendar());
-
-        
-AddAction("Appointments", vm.OpenAppointmentsCommand, NVButtonVariant.Filled);        AddAction("Doctors", vm.OpenDoctorsCommand, NVButtonVariant.Outline);
+            Title = "Book appointment",
+            Subtitle = "Pick a slot on the calendar.",
+            Items = SeedRows.For(ClinicSeed.Items, "Booking"),
+            Kind = "booking",
+            Actions =
+            [
+                new ClinicNav("Confirm appointment", vm.OpenAppointmentsCommand, true, "icon_calendar"),
+                new ClinicNav("Doctors", vm.OpenDoctorsCommand, false, "icon_doctor")
+            ]
+        });
     }
 }

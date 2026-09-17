@@ -1,26 +1,24 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Field;
 
-public sealed class PrintersPage : LuminaPage
+public sealed class PrintersPage : ContentPage
 {
-    public PrintersPage(PrintersViewModel vm) : base("Printers", "Harbor Field", "SPP and BLE receipts.")
+    public PrintersPage(PrintersViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = FieldSeed.Items.Where(x => x.Group == "Printers").ToList();
-        if (rows.Count == 0)
+        Title = "Printers";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = FieldUi.List(new FieldModel
         {
-            rows = FieldSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Receipt", vm.OpenReceiptCommand, NVButtonVariant.Filled);
+            Title = "Printers",
+            Subtitle = "SPP and BLE receipts.",
+            Items = SeedRows.For(FieldSeed.Items, "Printers"),
+            Kind = "printers",
+            Actions = [
+            new FieldNav("Receipt", vm.OpenReceiptCommand, true)
+        ]
+        });
     }
 }

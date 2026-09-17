@@ -1,26 +1,26 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Clinic;
 
-public sealed class LabDetailPage : LuminaPage
+public sealed class LabDetailPage : ContentPage
 {
-    public LabDetailPage(LabDetailViewModel vm) : base("LabDetail", "Nuvexa Clinic", "Lipid panel — 12 Sep 2026.")
+    public LabDetailPage(LabDetailViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = ClinicSeed.Items.Where(x => x.Group == "LabDetail").ToList();
-        if (rows.Count == 0)
+        Title = "Lipid panel";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = ClinicUi.Detail(new ClinicModel
         {
-            rows = ClinicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("VisitDetail", vm.OpenVisitDetailCommand, NVButtonVariant.Filled);        AddAction("Documents", vm.OpenDocumentsCommand, NVButtonVariant.Outline);
+            Title = "Lipid panel",
+            Subtitle = "Lipid panel — 12 Sep 2026.",
+            Items = SeedRows.For(ClinicSeed.Items, "LabDetail"),
+            Kind = "labs",
+            Actions =
+            [
+                new ClinicNav("Visit", vm.OpenVisitDetailCommand, true, "icon_clinic"),
+                new ClinicNav("Documents", vm.OpenDocumentsCommand, false, "icon_doc")
+            ]
+        });
     }
 }

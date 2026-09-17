@@ -1,26 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Bank;
 
-public sealed class RewardsPage : LuminaPage
+public sealed class RewardsPage : ContentPage
 {
-    public RewardsPage(RewardsViewModel vm) : base("Rewards", "Aether Bank", "Aurora points.")
+    public RewardsPage(RewardsViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = BankSeed.Items.Where(x => x.Group == "Rewards").ToList();
-        if (rows.Count == 0)
+        Title = "Rewards";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = BankUi.List(new BankModel
         {
-            rows = BankSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Cards", vm.OpenCardsCommand, NVButtonVariant.Filled);
+            Title = "Rewards",
+            Subtitle = "Aurora points on debit spend.",
+            Items = SeedRows.For(BankSeed.Items, "Rewards"),
+            Kind = "rewards",
+            Actions =
+            [
+                new BankNav("Linked cards", vm.OpenCardsCommand, true, "icon_card")
+            ]
+        });
     }
 }

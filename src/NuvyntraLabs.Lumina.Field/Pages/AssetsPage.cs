@@ -1,26 +1,28 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Field;
 
-public sealed class AssetsPage : LuminaPage
+public sealed class AssetsPage : ContentPage
 {
-    public AssetsPage(AssetsViewModel vm) : base("Assets", "Harbor Field", "Yard register.")
+    public AssetsPage(AssetsViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = FieldSeed.Items.Where(x => x.Group == "Assets").ToList();
-        if (rows.Count == 0)
+        Title = "Assets";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = FieldUi.Assets(new FieldModel
         {
-            rows = FieldSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("AssetDetail", vm.OpenAssetDetailCommand, NVButtonVariant.Filled);        AddAction("NfcScan", vm.OpenNfcScanCommand, NVButtonVariant.Outline);
+            Title = "Assets",
+            Subtitle = "Yard register.",
+            Items = SeedRows.For(FieldSeed.Items, "Assets"),
+            Kind = "assets",
+            SelectedTab = "Assets",
+            Tabs = FieldTheme.Tabs(vm.OpenHomeCommand, vm.OpenJobsCommand, null, vm.OpenOfflineQueueCommand, vm.OpenSettingsCommand),
+            Actions =
+            [
+                new FieldNav("Open asset", vm.OpenAssetDetailCommand, true, "icon_asset"),
+                new FieldNav("Scan", vm.OpenNfcScanCommand, false, "icon_nfc")
+            ]
+        });
     }
 }

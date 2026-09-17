@@ -1,26 +1,29 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Bank;
 
-public sealed class TransferPage : LuminaPage
+public sealed class TransferPage : ContentPage
 {
-    public TransferPage(TransferViewModel vm) : base("Transfer", "Aether Bank", "Pay a person or a bill.")
+    public TransferPage(TransferViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = BankSeed.Items.Where(x => x.Group == "Transfer").ToList();
-        if (rows.Count == 0)
+        Title = "Pay";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = BankUi.Pay(new BankModel
         {
-            rows = BankSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Payees", vm.OpenPayeesCommand, NVButtonVariant.Filled);        AddAction("Bills", vm.OpenBillsCommand, NVButtonVariant.Outline);
+            Title = "Pay",
+            Subtitle = "Send, pay a bill, or move money abroad.",
+            Items = SeedRows.For(BankSeed.Items, "Transfer"),
+            Kind = "pay",
+            SelectedTab = "Pay",
+            Tabs = BankTheme.Tabs(vm.OpenHomeCommand, vm.OpenAccountsCommand, null, vm.OpenCardsCommand, vm.OpenMoreCommand),
+            Actions =
+            [
+                new BankNav("Payees", vm.OpenPayeesCommand, true, "icon_people"),
+                new BankNav("Bills", vm.OpenBillsCommand, false, "icon_bill"),
+                new BankNav("Beneficiaries", vm.OpenBeneficiariesCommand, false, "icon_globe")
+            ]
+        });
     }
 }

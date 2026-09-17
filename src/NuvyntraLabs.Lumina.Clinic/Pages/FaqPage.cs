@@ -1,26 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Clinic;
 
-public sealed class FaqPage : LuminaPage
+public sealed class FaqPage : ContentPage
 {
-    public FaqPage(FaqViewModel vm) : base("FAQ", "Nuvexa Clinic", "Clinic questions.")
+    public FaqPage(FaqViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = ClinicSeed.Items.Where(x => x.Group == "Faq").ToList();
-        if (rows.Count == 0)
+        Title = "FAQ";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = ClinicUi.List(new ClinicModel
         {
-            rows = ClinicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Help", vm.OpenHelpCommand, NVButtonVariant.Filled);
+            Title = "FAQ",
+            Subtitle = "Clinic questions.",
+            Items = SeedRows.For(ClinicSeed.Items, "Faq"),
+            Kind = "faq",
+            Actions =
+            [
+                new ClinicNav("Help", vm.OpenHelpCommand, true, "icon_help")
+            ]
+        });
     }
 }

@@ -19,7 +19,7 @@ public partial class BookingViewModel : PageViewModel
 
     [AsyncModelCommand]
     private Task OpenAppointmentsAsync(CancellationToken cancellationToken)
-        => Navigator!.NavigateToAsync<AppointmentsViewModel>(cancellationToken);
+        => Navigator!.ResetAsync<AppointmentsViewModel>(cancellationToken);
     [AsyncModelCommand]
     private Task OpenDoctorsAsync(CancellationToken cancellationToken)
         => Navigator!.NavigateToAsync<DoctorsViewModel>(cancellationToken);

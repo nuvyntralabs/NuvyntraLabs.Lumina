@@ -1,26 +1,28 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Field;
 
-public sealed class JobsPage : LuminaPage
+public sealed class JobsPage : ContentPage
 {
-    public JobsPage(JobsViewModel vm) : base("Jobs", "Harbor Field", "Assigned work.")
+    public JobsPage(JobsViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = FieldSeed.Items.Where(x => x.Group == "Jobs").ToList();
-        if (rows.Count == 0)
+        Title = "Jobs";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = FieldUi.Jobs(new FieldModel
         {
-            rows = FieldSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("JobDetail", vm.OpenJobDetailCommand, NVButtonVariant.Filled);        AddAction("Route", vm.OpenRouteCommand, NVButtonVariant.Outline);
+            Title = "Jobs",
+            Subtitle = "Assigned work.",
+            Items = SeedRows.For(FieldSeed.Items, "Jobs"),
+            Kind = "jobs",
+            SelectedTab = "Jobs",
+            Tabs = FieldTheme.Tabs(vm.OpenHomeCommand, null, vm.OpenAssetsCommand, vm.OpenOfflineQueueCommand, vm.OpenSettingsCommand),
+            Actions =
+            [
+                new FieldNav("Job", vm.OpenJobDetailCommand, true, "icon_jobs"),
+                new FieldNav("Route", vm.OpenRouteCommand, false, "icon_route")
+            ]
+        });
     }
 }

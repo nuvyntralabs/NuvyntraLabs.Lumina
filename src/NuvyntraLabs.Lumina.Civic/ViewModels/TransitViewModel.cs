@@ -10,18 +10,36 @@ namespace NuvyntraLabs.Lumina.Civic;
 [Route("transit")]
 public partial class TransitViewModel : PageViewModel
 {
-
     public TransitViewModel(INavigator navigator, IDialogs dialogs)
         : base(navigator, dialogs)
     {
-
     }
+
+    [AsyncModelCommand]
+    private Task OpenHomeAsync(CancellationToken cancellationToken)
+        => Navigator!.ResetAsync<HomeViewModel>(cancellationToken);
+
+    [AsyncModelCommand]
+    private Task OpenServicesAsync(CancellationToken cancellationToken)
+        => Navigator!.ResetAsync<ServicesViewModel>(cancellationToken);
+
+    [AsyncModelCommand]
+    private Task OpenTransitAsync(CancellationToken cancellationToken)
+        => Navigator!.ResetAsync<TransitViewModel>(cancellationToken);
+
+    [AsyncModelCommand]
+    private Task OpenWalletAsync(CancellationToken cancellationToken)
+        => Navigator!.ResetAsync<WalletViewModel>(cancellationToken);
+
+    [AsyncModelCommand]
+    private Task OpenSettingsAsync(CancellationToken cancellationToken)
+        => Navigator!.ResetAsync<SettingsViewModel>(cancellationToken);
 
     [AsyncModelCommand]
     private Task OpenTicketDetailAsync(CancellationToken cancellationToken)
         => Navigator!.NavigateToAsync<TicketDetailViewModel>(cancellationToken);
+
     [AsyncModelCommand]
     private Task OpenBookingAsync(CancellationToken cancellationToken)
         => Navigator!.NavigateToAsync<BookingViewModel>(cancellationToken);
-
 }

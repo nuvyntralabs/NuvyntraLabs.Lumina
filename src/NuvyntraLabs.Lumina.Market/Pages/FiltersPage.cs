@@ -1,26 +1,23 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Market;
 
-public sealed class FiltersPage : LuminaPage
+public sealed class FiltersPage : ContentPage
 {
-    public FiltersPage(FiltersViewModel vm) : base("Filters", "Lumina Market", "Price, aisle, and delivery window.")
+    public FiltersPage(FiltersViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = MarketSeed.Items.Where(x => x.Group == "Filters").ToList();
-        if (rows.Count == 0)
+        Title = "Filters";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = MarketUi.Form(new MarketModel
         {
-            rows = MarketSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Catalog", vm.OpenCatalogCommand, NVButtonVariant.Filled);
+            Title = "Filters",
+            Subtitle = "Price, aisle, and delivery window.",
+            Items = SeedRows.For(MarketSeed.Items, "Filters"),
+            Actions = [
+            new MarketNav("Shop", vm.OpenCatalogCommand, true)
+        ]
+        });
     }
 }

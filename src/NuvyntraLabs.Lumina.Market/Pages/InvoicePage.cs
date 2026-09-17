@@ -1,26 +1,24 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Market;
 
-public sealed class InvoicePage : LuminaPage
+public sealed class InvoicePage : ContentPage
 {
-    public InvoicePage(InvoiceViewModel vm) : base("Invoice", "Lumina Market", "Studio invoice LM-1042.")
+    public InvoicePage(InvoiceViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = MarketSeed.Items.Where(x => x.Group == "Invoice").ToList();
-        if (rows.Count == 0)
+        Title = "Invoice";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = MarketUi.List(new MarketModel
         {
-            rows = MarketSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Receipt", vm.OpenReceiptCommand, NVButtonVariant.Filled);        AddAction("Orders", vm.OpenOrdersCommand, NVButtonVariant.Outline);
+            Title = "Invoice",
+            Subtitle = "Studio invoice LM-1042.",
+            Items = SeedRows.For(MarketSeed.Items, "Invoice"),
+            Actions = [
+            new MarketNav("Receipt", vm.OpenReceiptCommand, true),
+            new MarketNav("Orders", vm.OpenOrdersCommand, false)
+        ]
+        });
     }
 }

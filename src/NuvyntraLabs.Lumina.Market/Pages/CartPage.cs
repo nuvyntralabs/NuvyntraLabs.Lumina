@@ -1,26 +1,28 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Market;
 
-public sealed class CartPage : LuminaPage
+public sealed class CartPage : ContentPage
 {
-    public CartPage(CartViewModel vm) : base("Cart", "Lumina Market", "Two lines, one kitchen.")
+    public CartPage(CartViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = MarketSeed.Items.Where(x => x.Group == "Cart").ToList();
-        if (rows.Count == 0)
+        Title = "My cart";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = MarketUi.Cart(new MarketModel
         {
-            rows = MarketSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Checkout", vm.OpenCheckoutCommand, NVButtonVariant.Filled);        AddAction("Wishlist", vm.OpenWishlistCommand, NVButtonVariant.Outline);
+            Title = "My cart",
+            Subtitle = "Two lines, one kitchen.",
+            Items = SeedRows.For(MarketSeed.Items, "Cart"),
+            Kind = "cart",
+            SelectedTab = "Cart",
+            Tabs = MarketTheme.Tabs(vm.OpenHomeCommand, vm.OpenShopCommand, null, vm.OpenOrdersCommand, vm.OpenSettingsCommand),
+            Actions =
+            [
+                new MarketNav("Place order", vm.OpenCheckoutCommand, true, "icon_cart"),
+                new MarketNav("Saved", vm.OpenWishlistCommand, false, "icon_heart")
+            ]
+        });
     }
 }

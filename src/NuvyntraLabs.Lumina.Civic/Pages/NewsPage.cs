@@ -1,26 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Civic;
 
-public sealed class NewsPage : LuminaPage
+public sealed class NewsPage : ContentPage
 {
-    public NewsPage(NewsViewModel vm) : base("News", "Civic Pulse", "Borough notes.")
+    public NewsPage(NewsViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = CivicSeed.Items.Where(x => x.Group == "News").ToList();
-        if (rows.Count == 0)
+        Title = "News";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = CivicUi.List(new CivicModel
         {
-            rows = CivicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("ArticleDetail", vm.OpenArticleDetailCommand, NVButtonVariant.Filled);
+            Title = "News",
+            Subtitle = "Borough notes.",
+            Items = SeedRows.For(CivicSeed.Items, "News"),
+            Kind = "news",
+            Actions =
+            [
+                new CivicNav("Story", vm.OpenArticleDetailCommand, true, "icon_news")
+            ]
+        });
     }
 }

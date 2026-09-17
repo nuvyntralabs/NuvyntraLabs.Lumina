@@ -1,44 +1,33 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Market;
 
-public sealed class HomePage : LuminaPage
+public sealed class HomePage : ContentPage
 {
-    public HomePage(HomeViewModel vm) : base("Home", "Lumina Market", "Today at Harbour Market.")
+    public HomePage(HomeViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = MarketSeed.Items.Where(x => x.Group == "Home").ToList();
-        if (rows.Count == 0)
+        Title = "Home";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = MarketUi.Home(new MarketModel
         {
-            rows = MarketSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        Root.Add(new NVChart
-        {
-            Series =
+            Title = "Home",
+            Subtitle = "Today at Harbour Market.",
+            Items = SeedRows.For(MarketSeed.Items, "Home"),
+            Aisles = SeedRows.For(MarketSeed.Items, "Categories"),
+            SelectedTab = "Home",
+            Tabs = MarketTheme.Tabs(vm.OpenHomeCommand, vm.OpenShopCommand, vm.OpenCartCommand, vm.OpenOrdersCommand, vm.OpenSettingsCommand),
+            Actions =
             [
-                new NVChartSeries
-                {
-                    Title = "This week",
-                    Kind = NVChartSeriesKind.Bar,
-                    Points =
-                    [
-                        new NVChartPoint { Category = "Mon", Value = 4 },
-                        new NVChartPoint { Category = "Wed", Value = 7 },
-                        new NVChartPoint { Category = "Fri", Value = 5 }
-                    ]
-                }
+                new MarketNav("Aisles", vm.OpenCategoriesCommand, true, "icon_shop"),
+                new MarketNav("Shop", vm.OpenShopCommand, false, "icon_shop"),
+                new MarketNav("Search", vm.OpenSearchCommand, false, "icon_search"),
+                new MarketNav("Cart", vm.OpenCartCommand, false, "icon_cart"),
+                new MarketNav("Orders", vm.OpenOrdersCommand, false, "icon_orders"),
+                new MarketNav("Alerts", vm.OpenNotificationsCommand, false, "icon_bell"),
+                new MarketNav("You", vm.OpenSettingsCommand, false, "icon_user")
             ]
         });
-
-        
-AddAction("Categories", vm.OpenCategoriesCommand, NVButtonVariant.Filled);        AddAction("Catalog", vm.OpenCatalogCommand, NVButtonVariant.Outline);        AddAction("Search", vm.OpenSearchCommand, NVButtonVariant.Outline);        AddAction("Cart", vm.OpenCartCommand, NVButtonVariant.Outline);        AddAction("Orders", vm.OpenOrdersCommand, NVButtonVariant.Outline);        AddAction("Notifications", vm.OpenNotificationsCommand, NVButtonVariant.Outline);        AddAction("Settings", vm.OpenSettingsCommand, NVButtonVariant.Outline);
     }
 }

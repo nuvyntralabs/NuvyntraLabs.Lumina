@@ -1,26 +1,26 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Bank;
 
-public sealed class BeneficiariesPage : LuminaPage
+public sealed class BeneficiariesPage : ContentPage
 {
-    public BeneficiariesPage(BeneficiariesViewModel vm) : base("Beneficiaries", "Aether Bank", "International.")
+    public BeneficiariesPage(BeneficiariesViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = BankSeed.Items.Where(x => x.Group == "Beneficiaries").ToList();
-        if (rows.Count == 0)
+        Title = "International";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = BankUi.List(new BankModel
         {
-            rows = BankSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Payees", vm.OpenPayeesCommand, NVButtonVariant.Filled);        AddAction("Transfer", vm.OpenTransferCommand, NVButtonVariant.Outline);
+            Title = "International",
+            Subtitle = "SWIFT beneficiaries.",
+            Items = SeedRows.For(BankSeed.Items, "Beneficiaries"),
+            Kind = "beneficiaries",
+            Actions =
+            [
+                new BankNav("UK payees", vm.OpenPayeesCommand, true, "icon_people"),
+                new BankNav("Send", vm.OpenTransferCommand, false, "icon_send")
+            ]
+        });
     }
 }

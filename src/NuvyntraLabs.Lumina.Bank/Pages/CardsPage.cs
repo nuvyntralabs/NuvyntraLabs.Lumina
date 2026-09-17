@@ -1,26 +1,27 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Bank;
 
-public sealed class CardsPage : LuminaPage
+public sealed class CardsPage : ContentPage
 {
-    public CardsPage(CardsViewModel vm) : base("Cards", "Aether Bank", "Plastic and metal.")
+    public CardsPage(CardsViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = BankSeed.Items.Where(x => x.Group == "Cards").ToList();
-        if (rows.Count == 0)
+        Title = "Cards";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = BankUi.Cards(new BankModel
         {
-            rows = BankSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("CardDetail", vm.OpenCardDetailCommand, NVButtonVariant.Filled);
+            Title = "Cards",
+            Subtitle = "Debit and metal in your wallet.",
+            Items = SeedRows.For(BankSeed.Items, "Cards"),
+            Kind = "cards",
+            SelectedTab = "Cards",
+            Tabs = BankTheme.Tabs(vm.OpenHomeCommand, vm.OpenAccountsCommand, vm.OpenPayCommand, null, vm.OpenMoreCommand),
+            Actions =
+            [
+                new BankNav("Card", vm.OpenCardDetailCommand, true, "icon_card")
+            ]
+        });
     }
 }

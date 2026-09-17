@@ -1,26 +1,23 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Market;
 
-public sealed class ReceiptPage : LuminaPage
+public sealed class ReceiptPage : ContentPage
 {
-    public ReceiptPage(ReceiptViewModel vm) : base("Receipt", "Lumina Market", "Thermal-style ticket.")
+    public ReceiptPage(ReceiptViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = MarketSeed.Items.Where(x => x.Group == "Receipt").ToList();
-        if (rows.Count == 0)
+        Title = "Receipt";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = MarketUi.List(new MarketModel
         {
-            rows = MarketSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Orders", vm.OpenOrdersCommand, NVButtonVariant.Filled);
+            Title = "Receipt",
+            Subtitle = "Thermal-style ticket.",
+            Items = SeedRows.For(MarketSeed.Items, "Receipt"),
+            Actions = [
+            new MarketNav("Orders", vm.OpenOrdersCommand, true)
+        ]
+        });
     }
 }

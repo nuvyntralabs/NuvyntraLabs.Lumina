@@ -1,26 +1,24 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Civic;
 
-public sealed class TicketDetailPage : LuminaPage
+public sealed class TicketDetailPage : ContentPage
 {
-    public TicketDetailPage(TicketDetailViewModel vm) : base("TicketDetail", "Civic Pulse", "Day rover — QR on paper.")
+    public TicketDetailPage(TicketDetailViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = CivicSeed.Items.Where(x => x.Group == "TicketDetail").ToList();
-        if (rows.Count == 0)
+        Title = "Ticket detail";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = CivicUi.Detail(new CivicModel
         {
-            rows = CivicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Transit", vm.OpenTransitCommand, NVButtonVariant.Filled);        AddAction("Wallet", vm.OpenWalletCommand, NVButtonVariant.Outline);
+            Title = "Ticket detail",
+            Subtitle = "Day rover — QR on paper.",
+            Items = SeedRows.For(CivicSeed.Items, "TicketDetail"),
+            Actions = [
+            new CivicNav("Transit", vm.OpenTransitCommand, true),
+            new CivicNav("Wallet", vm.OpenWalletCommand, false)
+        ]
+        });
     }
 }

@@ -1,26 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Civic;
 
-public sealed class PeoplePage : LuminaPage
+public sealed class PeoplePage : ContentPage
 {
-    public PeoplePage(PeopleViewModel vm) : base("People", "Civic Pulse", "Ward contacts.")
+    public PeoplePage(PeopleViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = CivicSeed.Items.Where(x => x.Group == "People").ToList();
-        if (rows.Count == 0)
+        Title = "People";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = CivicUi.List(new CivicModel
         {
-            rows = CivicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Contact", vm.OpenContactCommand, NVButtonVariant.Filled);        AddAction("Offices", vm.OpenOfficesCommand, NVButtonVariant.Outline);
+            Title = "People",
+            Subtitle = "Ward contacts.",
+            Items = SeedRows.For(CivicSeed.Items, "People"),
+            Kind = "people",
+            Actions = [
+            new CivicNav("Contact", vm.OpenContactCommand, true),
+            new CivicNav("Offices", vm.OpenOfficesCommand, false)
+        ]
+        });
     }
 }

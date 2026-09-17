@@ -1,44 +1,36 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Field;
 
-public sealed class HomePage : LuminaPage
+public sealed class HomePage : ContentPage
 {
-    public HomePage(HomeViewModel vm) : base("Home", "Harbor Field", "Harbour district — Tuesday board.")
+    public HomePage(HomeViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = FieldSeed.Items.Where(x => x.Group == "Home").ToList();
-        if (rows.Count == 0)
+        Title = "Today";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = FieldUi.Home(new FieldModel
         {
-            rows = FieldSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        Root.Add(new NVChart
-        {
-            Series =
+            Title = "Today",
+            Subtitle = "Harbour district — Tuesday board.",
+            Items = SeedRows.For(FieldSeed.Items, "Home"),
+            SelectedTab = "Today",
+            Tabs = FieldTheme.Tabs(vm.OpenHomeCommand, vm.OpenJobsCommand, vm.OpenAssetsCommand, vm.OpenOfflineQueueCommand, vm.OpenSettingsCommand),
+            Actions =
             [
-                new NVChartSeries
-                {
-                    Title = "This week",
-                    Kind = NVChartSeriesKind.Bar,
-                    Points =
-                    [
-                        new NVChartPoint { Category = "Mon", Value = 4 },
-                        new NVChartPoint { Category = "Wed", Value = 7 },
-                        new NVChartPoint { Category = "Fri", Value = 5 }
-                    ]
-                }
+                new FieldNav("Jobs", vm.OpenJobsCommand, true, "icon_jobs"),
+                new FieldNav("Sites", vm.OpenSitesCommand, false, "icon_pin"),
+                new FieldNav("Assets", vm.OpenAssetsCommand, false, "icon_asset"),
+                new FieldNav("Queue", vm.OpenOfflineQueueCommand, false, "icon_queue"),
+                new FieldNav("Scan", vm.OpenNfcScanCommand, false, "icon_nfc"),
+                new FieldNav("Route", vm.OpenRouteCommand, false, "icon_route"),
+                new FieldNav("Safety", vm.OpenSafetyCommand, false, "icon_safety"),
+                new FieldNav("Time", vm.OpenTimesheetCommand, false, "icon_time"),
+                new FieldNav("Dashboard", vm.OpenDashboardCommand, false, "icon_dash"),
+                new FieldNav("Alerts", vm.OpenNotificationsCommand, false, "icon_bell"),
+                new FieldNav("You", vm.OpenSettingsCommand, false, "icon_user")
             ]
         });
-
-        
-AddAction("Jobs", vm.OpenJobsCommand, NVButtonVariant.Filled);        AddAction("Sites", vm.OpenSitesCommand, NVButtonVariant.Outline);        AddAction("Assets", vm.OpenAssetsCommand, NVButtonVariant.Outline);        AddAction("OfflineQueue", vm.OpenOfflineQueueCommand, NVButtonVariant.Outline);        AddAction("Dashboard", vm.OpenDashboardCommand, NVButtonVariant.Outline);        AddAction("Notifications", vm.OpenNotificationsCommand, NVButtonVariant.Outline);        AddAction("Settings", vm.OpenSettingsCommand, NVButtonVariant.Outline);
     }
 }

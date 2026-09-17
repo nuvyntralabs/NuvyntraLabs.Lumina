@@ -1,26 +1,28 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Market;
 
-public sealed class OrdersPage : LuminaPage
+public sealed class OrdersPage : ContentPage
 {
-    public OrdersPage(OrdersViewModel vm) : base("Orders", "Lumina Market", "Open tickets.")
+    public OrdersPage(OrdersViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = MarketSeed.Items.Where(x => x.Group == "Orders").ToList();
-        if (rows.Count == 0)
+        Title = "Orders";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = MarketUi.Orders(new MarketModel
         {
-            rows = MarketSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("OrderDetail", vm.OpenOrderDetailCommand, NVButtonVariant.Filled);        AddAction("Tracking", vm.OpenTrackingCommand, NVButtonVariant.Outline);
+            Title = "Orders",
+            Subtitle = "Open tickets.",
+            Items = SeedRows.For(MarketSeed.Items, "Orders"),
+            Kind = "orders",
+            SelectedTab = "Orders",
+            Tabs = MarketTheme.Tabs(vm.OpenHomeCommand, vm.OpenShopCommand, vm.OpenCartCommand, null, vm.OpenSettingsCommand),
+            Actions =
+            [
+                new MarketNav("View order", vm.OpenOrderDetailCommand, true, "icon_orders"),
+                new MarketNav("Track order", vm.OpenTrackingCommand, false, "icon_truck")
+            ]
+        });
     }
 }

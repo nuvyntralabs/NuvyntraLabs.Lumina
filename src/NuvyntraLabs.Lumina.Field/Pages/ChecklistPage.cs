@@ -1,26 +1,24 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Field;
 
-public sealed class ChecklistPage : LuminaPage
+public sealed class ChecklistPage : ContentPage
 {
-    public ChecklistPage(ChecklistViewModel vm) : base("Checklist", "Harbor Field", "Safety before the hatch.")
+    public ChecklistPage(ChecklistViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = FieldSeed.Items.Where(x => x.Group == "Checklist").ToList();
-        if (rows.Count == 0)
+        Title = "Checklist";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = FieldUi.Form(new FieldModel
         {
-            rows = FieldSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Safety", vm.OpenSafetyCommand, NVButtonVariant.Filled);        AddAction("Inspection", vm.OpenInspectionCommand, NVButtonVariant.Outline);
+            Title = "Checklist",
+            Subtitle = "Safety before the hatch.",
+            Items = SeedRows.For(FieldSeed.Items, "Checklist"),
+            Actions = [
+            new FieldNav("Safety", vm.OpenSafetyCommand, true),
+            new FieldNav("Inspection", vm.OpenInspectionCommand, false)
+        ]
+        });
     }
 }

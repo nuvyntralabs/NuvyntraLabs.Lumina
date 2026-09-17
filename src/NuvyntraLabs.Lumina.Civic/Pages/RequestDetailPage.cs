@@ -1,26 +1,24 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Civic;
 
-public sealed class RequestDetailPage : LuminaPage
+public sealed class RequestDetailPage : ContentPage
 {
-    public RequestDetailPage(RequestDetailViewModel vm) : base("RequestDetail", "Civic Pulse", "Missed food-waste bin.")
+    public RequestDetailPage(RequestDetailViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = CivicSeed.Items.Where(x => x.Group == "RequestDetail").ToList();
-        if (rows.Count == 0)
+        Title = "Request detail";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = CivicUi.Detail(new CivicModel
         {
-            rows = CivicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Services", vm.OpenServicesCommand, NVButtonVariant.Filled);        AddAction("Offices", vm.OpenOfficesCommand, NVButtonVariant.Outline);
+            Title = "Request detail",
+            Subtitle = "Missed food-waste bin.",
+            Items = SeedRows.For(CivicSeed.Items, "RequestDetail"),
+            Actions = [
+            new CivicNav("Services", vm.OpenServicesCommand, true),
+            new CivicNav("Offices", vm.OpenOfficesCommand, false)
+        ]
+        });
     }
 }

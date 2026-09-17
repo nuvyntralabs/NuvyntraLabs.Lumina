@@ -24,4 +24,8 @@ public partial class DoctorProfileViewModel : PageViewModel
     private Task OpenInboxAsync(CancellationToken cancellationToken)
         => Navigator!.NavigateToAsync<InboxViewModel>(cancellationToken);
 
+    [AsyncModelCommand]
+    private Task OpenInCallAsync(CancellationToken cancellationToken)
+        => Navigator!.NavigateToAsync<InCallViewModel>(cancellationToken);
+
 }

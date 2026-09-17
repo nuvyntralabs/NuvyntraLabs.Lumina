@@ -10,33 +10,52 @@ namespace NuvyntraLabs.Lumina.Clinic;
 [Route("home")]
 public partial class HomeViewModel : PageViewModel
 {
-
     public HomeViewModel(INavigator navigator, IDialogs dialogs)
         : base(navigator, dialogs)
     {
-
     }
 
     [AsyncModelCommand]
-    private Task OpenAppointmentsAsync(CancellationToken cancellationToken)
-        => Navigator!.NavigateToAsync<AppointmentsViewModel>(cancellationToken);
+    private Task OpenHomeAsync(CancellationToken cancellationToken)
+        => Navigator!.ResetAsync<HomeViewModel>(cancellationToken);
+
     [AsyncModelCommand]
     private Task OpenDoctorsAsync(CancellationToken cancellationToken)
-        => Navigator!.NavigateToAsync<DoctorsViewModel>(cancellationToken);
+        => Navigator!.ResetAsync<DoctorsViewModel>(cancellationToken);
+
+    [AsyncModelCommand]
+    private Task OpenAppointmentsAsync(CancellationToken cancellationToken)
+        => Navigator!.ResetAsync<AppointmentsViewModel>(cancellationToken);
+
+    [AsyncModelCommand]
+    private Task OpenRecordsAsync(CancellationToken cancellationToken)
+        => Navigator!.ResetAsync<LabResultsViewModel>(cancellationToken);
+
+    [AsyncModelCommand]
+    private Task OpenSettingsAsync(CancellationToken cancellationToken)
+        => Navigator!.ResetAsync<SettingsViewModel>(cancellationToken);
+
     [AsyncModelCommand]
     private Task OpenPharmacyAsync(CancellationToken cancellationToken)
         => Navigator!.NavigateToAsync<PharmacyViewModel>(cancellationToken);
+
     [AsyncModelCommand]
     private Task OpenLabResultsAsync(CancellationToken cancellationToken)
         => Navigator!.NavigateToAsync<LabResultsViewModel>(cancellationToken);
+
     [AsyncModelCommand]
     private Task OpenInboxAsync(CancellationToken cancellationToken)
         => Navigator!.NavigateToAsync<InboxViewModel>(cancellationToken);
+
     [AsyncModelCommand]
     private Task OpenNotificationsAsync(CancellationToken cancellationToken)
         => Navigator!.NavigateToAsync<NotificationsViewModel>(cancellationToken);
-    [AsyncModelCommand]
-    private Task OpenSettingsAsync(CancellationToken cancellationToken)
-        => Navigator!.NavigateToAsync<SettingsViewModel>(cancellationToken);
 
+    [AsyncModelCommand]
+    private Task OpenInCallAsync(CancellationToken cancellationToken)
+        => Navigator!.NavigateToAsync<InCallViewModel>(cancellationToken);
+
+    [AsyncModelCommand]
+    private Task OpenBookingAsync(CancellationToken cancellationToken)
+        => Navigator!.NavigateToAsync<BookingViewModel>(cancellationToken);
 }

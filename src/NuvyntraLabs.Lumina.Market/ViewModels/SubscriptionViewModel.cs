@@ -22,6 +22,6 @@ public partial class SubscriptionViewModel : PageViewModel
         => Navigator!.NavigateToAsync<CheckoutViewModel>(cancellationToken);
     [AsyncModelCommand]
     private Task OpenSettingsAsync(CancellationToken cancellationToken)
-        => Navigator!.NavigateToAsync<SettingsViewModel>(cancellationToken);
+        => Navigator!.ResetAsync<SettingsViewModel>(cancellationToken);
 
 }

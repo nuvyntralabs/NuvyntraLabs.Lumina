@@ -1,28 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Bank;
 
-public sealed class SignInPage : LuminaPage
+public sealed class SignInPage : ContentPage
 {
-    public SignInPage(SignInViewModel vm) : base("SignIn", "Aether Bank", "Member number or email.")
+    public SignInPage(SignInViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = BankSeed.Items.Where(x => x.Group == "SignIn").ToList();
-        if (rows.Count == 0)
+        Title = "Welcome back";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = BankUi.Auth(new BankModel
         {
-            rows = BankSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-Root.Add(new NVTextField { Label = "Email" });
-        Root.Add(new NVTextField { Label = "Password", IsPassword = true });
-        AddAction("Sign in", vm.SignInCommand);        AddAction("PinLock", vm.OpenPinLockCommand, NVButtonVariant.Filled);
+            Title = "Welcome back",
+            Subtitle = "Member number, email, or Face ID.",
+            Items = SeedRows.For(BankSeed.Items, "SignIn"),
+            Actions =
+            [
+                new BankNav("Sign in", vm.SignInCommand, true, "icon_user"),
+                new BankNav("Unlock with PIN", vm.OpenPinLockCommand, false, "icon_shield")
+            ]
+        });
     }
 }

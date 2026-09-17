@@ -1,44 +1,34 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Bank;
 
-public sealed class DashboardPage : LuminaPage
+public sealed class DashboardPage : ContentPage
 {
-    public DashboardPage(DashboardViewModel vm) : base("Dashboard", "Aether Bank", "Good afternoon, Ada.")
+    public DashboardPage(DashboardViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = BankSeed.Items.Where(x => x.Group == "Dashboard").ToList();
-        if (rows.Count == 0)
+        Title = "Home";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = BankUi.Dashboard(new BankModel
         {
-            rows = BankSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        Root.Add(new NVChart
-        {
-            Series =
+            Title = "Home",
+            Subtitle = "Good afternoon, Ada.",
+            Items = SeedRows.For(BankSeed.Items, "Dashboard"),
+            SelectedTab = "Home",
+            Tabs = BankTheme.Tabs(vm.OpenHomeCommand, vm.OpenAccountsCommand, vm.OpenPayCommand, vm.OpenCardsCommand, vm.OpenMoreCommand),
+            Actions =
             [
-                new NVChartSeries
-                {
-                    Title = "This week",
-                    Kind = NVChartSeriesKind.Bar,
-                    Points =
-                    [
-                        new NVChartPoint { Category = "Mon", Value = 4 },
-                        new NVChartPoint { Category = "Wed", Value = 7 },
-                        new NVChartPoint { Category = "Fri", Value = 5 }
-                    ]
-                }
+                new BankNav("Send", vm.OpenPayCommand, true, "icon_send"),
+                new BankNav("Bills", vm.OpenBillsCommand, false, "icon_bill"),
+                new BankNav("Cards", vm.OpenCardsCommand, false, "icon_card"),
+                new BankNav("Invest", vm.OpenInvestCommand, false, "icon_chart"),
+                new BankNav("Alerts", vm.OpenNotificationsCommand, false, "icon_bell"),
+                new BankNav("You", vm.OpenMoreCommand, false, "icon_more"),
+                new BankNav("Account", vm.OpenAccountDetailCommand, false, "icon_wallet"),
+                new BankNav("Statements", vm.OpenStatementsCommand, false, "icon_statement"),
+                new BankNav("Rewards", vm.OpenRewardsCommand, false, "icon_gift")
             ]
         });
-
-        
-AddAction("Accounts", vm.OpenAccountsCommand, NVButtonVariant.Filled);        AddAction("Cards", vm.OpenCardsCommand, NVButtonVariant.Outline);        AddAction("Transfer", vm.OpenTransferCommand, NVButtonVariant.Outline);        AddAction("Invest", vm.OpenInvestCommand, NVButtonVariant.Outline);        AddAction("Notifications", vm.OpenNotificationsCommand, NVButtonVariant.Outline);        AddAction("Settings", vm.OpenSettingsCommand, NVButtonVariant.Outline);
     }
 }

@@ -1,29 +1,24 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Clinic;
 
-public sealed class WalkthroughPage : LuminaPage
+public sealed class WalkthroughPage : ContentPage
 {
-    public WalkthroughPage(WalkthroughViewModel vm) : base("Walkthrough", "Nuvexa Clinic", "Care without the clipboard pile.")
+    public WalkthroughPage(WalkthroughViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = ClinicSeed.Items.Where(x => x.Group == "Walkthrough").ToList();
-        if (rows.Count == 0)
+        Title = "Welcome";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = ClinicUi.Walkthrough(new ClinicModel
         {
-            rows = ClinicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        Root.Add(new NVCarousel { Items = rows.Select(r => r.Title).ToList() });
-        Root.Add(new NVDotIndicator { Count = 3, Index = 0 });
-
-        
-AddAction("SignIn", vm.OpenSignInCommand, NVButtonVariant.Filled);
+            Title = "Welcome",
+            Subtitle = "Care without the clipboard pile.",
+            Items = SeedRows.For(ClinicSeed.Items, "Walkthrough"),
+            Actions =
+            [
+                new ClinicNav("Get started", vm.OpenSignInCommand, true)
+            ]
+        });
     }
 }

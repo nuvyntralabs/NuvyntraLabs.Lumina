@@ -1,26 +1,26 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Civic;
 
-public sealed class NotificationsPage : LuminaPage
+public sealed class NotificationsPage : ContentPage
 {
-    public NotificationsPage(NotificationsViewModel vm) : base("Notifications", "Civic Pulse", "Borough pings.")
+    public NotificationsPage(NotificationsViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = CivicSeed.Items.Where(x => x.Group == "Notifications").ToList();
-        if (rows.Count == 0)
+        Title = "Notifications";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = CivicUi.List(new CivicModel
         {
-            rows = CivicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Transit", vm.OpenTransitCommand, NVButtonVariant.Filled);        AddAction("Services", vm.OpenServicesCommand, NVButtonVariant.Outline);
+            Title = "Notifications",
+            Subtitle = "Borough pings.",
+            Items = SeedRows.For(CivicSeed.Items, "Notifications"),
+            Kind = "notifications",
+            Actions =
+            [
+                new CivicNav("Transit", vm.OpenTransitCommand, true, "icon_transit"),
+                new CivicNav("Services", vm.OpenServicesCommand, false, "icon_services", "Open a request")
+            ]
+        });
     }
 }

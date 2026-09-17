@@ -20,7 +20,11 @@ public partial class App : Application
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
-        => new(new NavigationPage(_services.GetRequiredService<SignInPage>()));
+        => new(new NavigationPage(_services.GetRequiredService<SignInPage>())
+        {
+            BarBackgroundColor = Color.FromArgb("#1B365D"),
+            BarTextColor = Colors.White
+        });
 
     static async Task SeedAsync()
     {

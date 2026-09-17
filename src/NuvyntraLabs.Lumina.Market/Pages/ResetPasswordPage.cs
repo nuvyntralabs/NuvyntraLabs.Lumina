@@ -1,26 +1,23 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Market;
 
-public sealed class ResetPasswordPage : LuminaPage
+public sealed class ResetPasswordPage : ContentPage
 {
-    public ResetPasswordPage(ResetPasswordViewModel vm) : base("ResetPassword", "Lumina Market", "OTP then a new secret.")
+    public ResetPasswordPage(ResetPasswordViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = MarketSeed.Items.Where(x => x.Group == "ResetPassword").ToList();
-        if (rows.Count == 0)
+        Title = "New password";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = MarketUi.Auth(new MarketModel
         {
-            rows = MarketSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("SignIn", vm.OpenSignInCommand, NVButtonVariant.Filled);
+            Title = "New password",
+            Subtitle = "OTP then a new secret.",
+            Items = SeedRows.For(MarketSeed.Items, "ResetPassword"),
+            Actions = [
+            new MarketNav("Sign in", vm.OpenSignInCommand, true)
+        ]
+        });
     }
 }

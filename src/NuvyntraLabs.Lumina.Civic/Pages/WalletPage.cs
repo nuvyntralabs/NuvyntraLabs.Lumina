@@ -1,26 +1,29 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Civic;
 
-public sealed class WalletPage : LuminaPage
+public sealed class WalletPage : ContentPage
 {
-    public WalletPage(WalletViewModel vm) : base("Wallet", "Civic Pulse", "Civic pass + rover.")
+    public WalletPage(WalletViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = CivicSeed.Items.Where(x => x.Group == "Wallet").ToList();
-        if (rows.Count == 0)
+        Title = "Wallet";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = CivicUi.Wallet(new CivicModel
         {
-            rows = CivicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("TicketDetail", vm.OpenTicketDetailCommand, NVButtonVariant.Filled);        AddAction("Permits", vm.OpenPermitsCommand, NVButtonVariant.Outline);
+            Title = "Wallet",
+            Subtitle = "Civic pass + rover.",
+            Items = SeedRows.For(CivicSeed.Items, "Wallet"),
+            Kind = "wallet",
+            SelectedTab = "Wallet",
+            Tabs = CivicTheme.Tabs(vm.OpenHomeCommand, vm.OpenServicesCommand, vm.OpenTransitCommand, null, vm.OpenSettingsCommand),
+            Actions =
+            [
+                new CivicNav("Ticket", vm.OpenTicketDetailCommand, true, "icon_ticket"),
+                new CivicNav("Permits", vm.OpenPermitsCommand, false, "icon_permit"),
+                new CivicNav("Help", vm.OpenHelpCommand, false, "icon_help")
+            ]
+        });
     }
 }

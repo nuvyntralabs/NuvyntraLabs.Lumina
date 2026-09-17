@@ -1,26 +1,28 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Bank;
 
-public sealed class AccountsPage : LuminaPage
+public sealed class AccountsPage : ContentPage
 {
-    public AccountsPage(AccountsViewModel vm) : base("Accounts", "Aether Bank", "Sterling books.")
+    public AccountsPage(AccountsViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = BankSeed.Items.Where(x => x.Group == "Accounts").ToList();
-        if (rows.Count == 0)
+        Title = "Accounts";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = BankUi.Accounts(new BankModel
         {
-            rows = BankSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("AccountDetail", vm.OpenAccountDetailCommand, NVButtonVariant.Filled);        AddAction("Statements", vm.OpenStatementsCommand, NVButtonVariant.Outline);
+            Title = "Accounts",
+            Subtitle = "Sterling and travel books.",
+            Items = SeedRows.For(BankSeed.Items, "Accounts"),
+            Kind = "accounts",
+            SelectedTab = "Accounts",
+            Tabs = BankTheme.Tabs(vm.OpenHomeCommand, null, vm.OpenPayCommand, vm.OpenCardsCommand, vm.OpenMoreCommand),
+            Actions =
+            [
+                new BankNav("Account", vm.OpenAccountDetailCommand, true, "icon_wallet"),
+                new BankNav("Statements", vm.OpenStatementsCommand, false, "icon_statement")
+            ]
+        });
     }
 }

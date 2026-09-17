@@ -1,26 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Field;
 
-public sealed class SafetyPage : LuminaPage
+public sealed class SafetyPage : ContentPage
 {
-    public SafetyPage(SafetyViewModel vm) : base("Safety", "Harbor Field", "Brief — confined space.")
+    public SafetyPage(SafetyViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = FieldSeed.Items.Where(x => x.Group == "Safety").ToList();
-        if (rows.Count == 0)
+        Title = "Safety";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = FieldUi.List(new FieldModel
         {
-            rows = FieldSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Checklist", vm.OpenChecklistCommand, NVButtonVariant.Filled);        AddAction("JobDetail", vm.OpenJobDetailCommand, NVButtonVariant.Outline);
+            Title = "Safety",
+            Subtitle = "Brief — confined space.",
+            Items = SeedRows.For(FieldSeed.Items, "Safety"),
+            Kind = "safety",
+            Actions = [
+            new FieldNav("Checklist", vm.OpenChecklistCommand, true),
+            new FieldNav("Job", vm.OpenJobDetailCommand, false)
+        ]
+        });
     }
 }

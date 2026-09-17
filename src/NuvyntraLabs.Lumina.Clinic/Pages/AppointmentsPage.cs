@@ -1,26 +1,28 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Clinic;
 
-public sealed class AppointmentsPage : LuminaPage
+public sealed class AppointmentsPage : ContentPage
 {
-    public AppointmentsPage(AppointmentsViewModel vm) : base("Appointments", "Nuvexa Clinic", "Upcoming and past.")
+    public AppointmentsPage(AppointmentsViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = ClinicSeed.Items.Where(x => x.Group == "Appointments").ToList();
-        if (rows.Count == 0)
+        Title = "My appointments";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = ClinicUi.Visits(new ClinicModel
         {
-            rows = ClinicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Booking", vm.OpenBookingCommand, NVButtonVariant.Filled);        AddAction("VisitDetail", vm.OpenVisitDetailCommand, NVButtonVariant.Outline);
+            Title = "My appointments",
+            Subtitle = "Upcoming and past visits.",
+            Items = SeedRows.For(ClinicSeed.Items, "Appointments"),
+            Kind = "visits",
+            SelectedTab = "Visits",
+            Tabs = ClinicTheme.Tabs(vm.OpenHomeCommand, vm.OpenDoctorsCommand, null, vm.OpenRecordsCommand, vm.OpenSettingsCommand),
+            Actions =
+            [
+                new ClinicNav("Booking", vm.OpenBookingCommand, true, "icon_calendar"),
+                new ClinicNav("Visit", vm.OpenVisitDetailCommand, false, "icon_clinic")
+            ]
+        });
     }
 }

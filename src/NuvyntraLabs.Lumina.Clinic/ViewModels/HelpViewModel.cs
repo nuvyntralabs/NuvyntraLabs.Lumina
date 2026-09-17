@@ -22,6 +22,6 @@ public partial class HelpViewModel : PageViewModel
         => Navigator!.NavigateToAsync<FaqViewModel>(cancellationToken);
     [AsyncModelCommand]
     private Task OpenSettingsAsync(CancellationToken cancellationToken)
-        => Navigator!.NavigateToAsync<SettingsViewModel>(cancellationToken);
+        => Navigator!.ResetAsync<SettingsViewModel>(cancellationToken);
 
 }

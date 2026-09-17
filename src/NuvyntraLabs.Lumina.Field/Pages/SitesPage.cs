@@ -1,26 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Field;
 
-public sealed class SitesPage : LuminaPage
+public sealed class SitesPage : ContentPage
 {
-    public SitesPage(SitesViewModel vm) : base("Sites", "Harbor Field", "Yards on the fence list.")
+    public SitesPage(SitesViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = FieldSeed.Items.Where(x => x.Group == "Sites").ToList();
-        if (rows.Count == 0)
+        Title = "Sites";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = FieldUi.List(new FieldModel
         {
-            rows = FieldSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Geofences", vm.OpenGeofencesCommand, NVButtonVariant.Filled);        AddAction("JobDetail", vm.OpenJobDetailCommand, NVButtonVariant.Outline);
+            Title = "Sites",
+            Subtitle = "Yards on the fence list.",
+            Items = SeedRows.For(FieldSeed.Items, "Sites"),
+            Kind = "sites",
+            Actions = [
+            new FieldNav("Geofences", vm.OpenGeofencesCommand, true),
+            new FieldNav("Job", vm.OpenJobDetailCommand, false)
+        ]
+        });
     }
 }

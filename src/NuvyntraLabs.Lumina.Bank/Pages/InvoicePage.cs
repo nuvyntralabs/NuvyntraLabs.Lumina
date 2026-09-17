@@ -1,26 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Bank;
 
-public sealed class InvoicePage : LuminaPage
+public sealed class InvoicePage : ContentPage
 {
-    public InvoicePage(InvoiceViewModel vm) : base("Invoice", "Aether Bank", "Advice note 12 Sep.")
+    public InvoicePage(InvoiceViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = BankSeed.Items.Where(x => x.Group == "Invoice").ToList();
-        if (rows.Count == 0)
+        Title = "Advice note";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = BankUi.Detail(new BankModel
         {
-            rows = BankSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("AccountDetail", vm.OpenAccountDetailCommand, NVButtonVariant.Filled);
+            Title = "Advice note",
+            Subtitle = "FX 12 Sep · current · 8841",
+            Items = SeedRows.For(BankSeed.Items, "Invoice"),
+            Kind = "invoice",
+            Actions =
+            [
+                new BankNav("Open account", vm.OpenAccountDetailCommand, true, "icon_wallet")
+            ]
+        });
     }
 }

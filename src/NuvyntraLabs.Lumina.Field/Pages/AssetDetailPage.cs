@@ -1,26 +1,24 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Field;
 
-public sealed class AssetDetailPage : LuminaPage
+public sealed class AssetDetailPage : ContentPage
 {
-    public AssetDetailPage(AssetDetailViewModel vm) : base("AssetDetail", "Harbor Field", "PUMP-441 — Flygt storm pump.")
+    public AssetDetailPage(AssetDetailViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = FieldSeed.Items.Where(x => x.Group == "AssetDetail").ToList();
-        if (rows.Count == 0)
+        Title = "Asset detail";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = FieldUi.Job(new FieldModel
         {
-            rows = FieldSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Inspection", vm.OpenInspectionCommand, NVButtonVariant.Filled);        AddAction("Files", vm.OpenFilesCommand, NVButtonVariant.Outline);
+            Title = "Asset detail",
+            Subtitle = "PUMP-441 — Flygt storm pump.",
+            Items = SeedRows.For(FieldSeed.Items, "AssetDetail"),
+            Actions = [
+            new FieldNav("Inspection", vm.OpenInspectionCommand, true),
+            new FieldNav("Files", vm.OpenFilesCommand, false)
+        ]
+        });
     }
 }

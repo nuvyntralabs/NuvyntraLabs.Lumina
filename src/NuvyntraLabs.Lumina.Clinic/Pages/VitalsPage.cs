@@ -1,26 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Clinic;
 
-public sealed class VitalsPage : LuminaPage
+public sealed class VitalsPage : ContentPage
 {
-    public VitalsPage(VitalsViewModel vm) : base("Vitals", "Nuvexa Clinic", "Home readings this week.")
+    public VitalsPage(VitalsViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = ClinicSeed.Items.Where(x => x.Group == "Vitals").ToList();
-        if (rows.Count == 0)
+        Title = "Vitals";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = ClinicUi.Detail(new ClinicModel
         {
-            rows = ClinicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("HealthProfile", vm.OpenHealthProfileCommand, NVButtonVariant.Filled);
+            Title = "Vitals",
+            Subtitle = "Home readings this week.",
+            Items = SeedRows.For(ClinicSeed.Items, "Vitals"),
+            Kind = "vitals",
+            Actions =
+            [
+                new ClinicNav("Health profile", vm.OpenHealthProfileCommand, true, "icon_user")
+            ]
+        });
     }
 }

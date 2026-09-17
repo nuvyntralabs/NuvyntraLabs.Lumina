@@ -1,26 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Market;
 
-public sealed class SubscriptionPage : LuminaPage
+public sealed class SubscriptionPage : ContentPage
 {
-    public SubscriptionPage(SubscriptionViewModel vm) : base("Subscription", "Lumina Market", "Weekly produce crate.")
+    public SubscriptionPage(SubscriptionViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = MarketSeed.Items.Where(x => x.Group == "Subscription").ToList();
-        if (rows.Count == 0)
+        Title = "Subscription";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = MarketUi.Form(new MarketModel
         {
-            rows = MarketSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Checkout", vm.OpenCheckoutCommand, NVButtonVariant.Filled);        AddAction("Settings", vm.OpenSettingsCommand, NVButtonVariant.Outline);
+            Title = "Aurora crate",
+            Subtitle = "Weekly produce crate.",
+            Items = SeedRows.For(MarketSeed.Items, "Subscription"),
+            Kind = "subscription",
+            Actions = [
+            new MarketNav("Checkout", vm.OpenCheckoutCommand, true),
+            new MarketNav("You", vm.OpenSettingsCommand, false)
+        ]
+        });
     }
 }

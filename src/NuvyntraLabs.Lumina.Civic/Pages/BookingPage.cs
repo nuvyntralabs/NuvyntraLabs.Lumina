@@ -1,27 +1,24 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Civic;
 
-public sealed class BookingPage : LuminaPage
+public sealed class BookingPage : ContentPage
 {
-    public BookingPage(BookingViewModel vm) : base("Booking", "Civic Pulse", "Reserve a desk or a court.")
+    public BookingPage(BookingViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = CivicSeed.Items.Where(x => x.Group == "Booking").ToList();
-        if (rows.Count == 0)
+        Title = "Booking";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = CivicUi.Form(new CivicModel
         {
-            rows = CivicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-        Root.Add(new NVCalendar());
-
-        
-AddAction("Events", vm.OpenEventsCommand, NVButtonVariant.Filled);        AddAction("Offices", vm.OpenOfficesCommand, NVButtonVariant.Outline);
+            Title = "Booking",
+            Subtitle = "Reserve a desk or a court.",
+            Items = SeedRows.For(CivicSeed.Items, "Booking"),
+            Actions = [
+            new CivicNav("Events", vm.OpenEventsCommand, true),
+            new CivicNav("Offices", vm.OpenOfficesCommand, false)
+        ]
+        });
     }
 }

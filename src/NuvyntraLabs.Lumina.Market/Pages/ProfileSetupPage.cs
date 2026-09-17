@@ -1,26 +1,23 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Market;
 
-public sealed class ProfileSetupPage : LuminaPage
+public sealed class ProfileSetupPage : ContentPage
 {
-    public ProfileSetupPage(ProfileSetupViewModel vm) : base("ProfileSetup", "Lumina Market", "Avatar, kitchen name, delivery default.")
+    public ProfileSetupPage(ProfileSetupViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = MarketSeed.Items.Where(x => x.Group == "ProfileSetup").ToList();
-        if (rows.Count == 0)
+        Title = "Your profile";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = MarketUi.Form(new MarketModel
         {
-            rows = MarketSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Home", vm.OpenHomeCommand, NVButtonVariant.Filled);
+            Title = "Your profile",
+            Subtitle = "Avatar, kitchen name, delivery default.",
+            Items = SeedRows.For(MarketSeed.Items, "ProfileSetup"),
+            Actions = [
+            new MarketNav("Continue", vm.OpenHomeCommand, true)
+        ]
+        });
     }
 }

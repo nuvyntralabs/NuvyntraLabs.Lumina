@@ -1,26 +1,24 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Market;
 
-public sealed class TrackingPage : LuminaPage
+public sealed class TrackingPage : ContentPage
 {
-    public TrackingPage(TrackingViewModel vm) : base("Tracking", "Lumina Market", "Packed → ship → door.")
+    public TrackingPage(TrackingViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = MarketSeed.Items.Where(x => x.Group == "Tracking").ToList();
-        if (rows.Count == 0)
+        Title = "Tracking";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = MarketUi.List(new MarketModel
         {
-            rows = MarketSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("OrderDetail", vm.OpenOrderDetailCommand, NVButtonVariant.Filled);        AddAction("SellerChat", vm.OpenSellerChatCommand, NVButtonVariant.Outline);
+            Title = "Tracking",
+            Subtitle = "Packed → ship → door.",
+            Items = SeedRows.For(MarketSeed.Items, "Tracking"),
+            Actions = [
+            new MarketNav("View order", vm.OpenOrderDetailCommand, true),
+            new MarketNav("Message kitchen", vm.OpenSellerChatCommand, false)
+        ]
+        });
     }
 }

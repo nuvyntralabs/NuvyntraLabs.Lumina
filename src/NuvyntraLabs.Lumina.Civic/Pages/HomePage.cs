@@ -1,44 +1,32 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Civic;
 
-public sealed class HomePage : LuminaPage
+public sealed class HomePage : ContentPage
 {
-    public HomePage(HomeViewModel vm) : base("Home", "Civic Pulse", "Harbour borough today.")
+    public HomePage(HomeViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = CivicSeed.Items.Where(x => x.Group == "Home").ToList();
-        if (rows.Count == 0)
+        Title = "Home";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = CivicUi.Home(new CivicModel
         {
-            rows = CivicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        Root.Add(new NVChart
-        {
-            Series =
+            Title = "Home",
+            Subtitle = "Harbour borough today.",
+            Items = SeedRows.For(CivicSeed.Items, "Home"),
+            SelectedTab = "Home",
+            Tabs = CivicTheme.Tabs(vm.OpenHomeCommand, vm.OpenServicesCommand, vm.OpenTransitCommand, vm.OpenWalletCommand, vm.OpenSettingsCommand),
+            Actions =
             [
-                new NVChartSeries
-                {
-                    Title = "This week",
-                    Kind = NVChartSeriesKind.Bar,
-                    Points =
-                    [
-                        new NVChartPoint { Category = "Mon", Value = 4 },
-                        new NVChartPoint { Category = "Wed", Value = 7 },
-                        new NVChartPoint { Category = "Fri", Value = 5 }
-                    ]
-                }
+                new CivicNav("Services", vm.OpenServicesCommand, true, "icon_services"),
+                new CivicNav("Transit", vm.OpenTransitCommand, false, "icon_transit"),
+                new CivicNav("Events", vm.OpenEventsCommand, false, "icon_calendar"),
+                new CivicNav("News", vm.OpenNewsCommand, false, "icon_news"),
+                new CivicNav("Wallet", vm.OpenWalletCommand, false, "icon_wallet"),
+                new CivicNav("Alerts", vm.OpenNotificationsCommand, false, "icon_bell"),
+                new CivicNav("You", vm.OpenSettingsCommand, false, "icon_user")
             ]
         });
-
-        
-AddAction("Services", vm.OpenServicesCommand, NVButtonVariant.Filled);        AddAction("Transit", vm.OpenTransitCommand, NVButtonVariant.Outline);        AddAction("Events", vm.OpenEventsCommand, NVButtonVariant.Outline);        AddAction("News", vm.OpenNewsCommand, NVButtonVariant.Outline);        AddAction("Wallet", vm.OpenWalletCommand, NVButtonVariant.Outline);        AddAction("Notifications", vm.OpenNotificationsCommand, NVButtonVariant.Outline);        AddAction("Settings", vm.OpenSettingsCommand, NVButtonVariant.Outline);
     }
 }

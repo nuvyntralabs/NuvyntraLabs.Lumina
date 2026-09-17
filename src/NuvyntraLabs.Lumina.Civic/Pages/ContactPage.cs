@@ -1,26 +1,24 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Civic;
 
-public sealed class ContactPage : LuminaPage
+public sealed class ContactPage : ContentPage
 {
-    public ContactPage(ContactViewModel vm) : base("Contact", "Civic Pulse", "Write the desk.")
+    public ContactPage(ContactViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = CivicSeed.Items.Where(x => x.Group == "Contact").ToList();
-        if (rows.Count == 0)
+        Title = "Contact";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = CivicUi.Form(new CivicModel
         {
-            rows = CivicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Services", vm.OpenServicesCommand, NVButtonVariant.Filled);        AddAction("Help", vm.OpenHelpCommand, NVButtonVariant.Outline);
+            Title = "Contact",
+            Subtitle = "Write the desk.",
+            Items = SeedRows.For(CivicSeed.Items, "Contact"),
+            Actions = [
+            new CivicNav("Services", vm.OpenServicesCommand, true),
+            new CivicNav("Help", vm.OpenHelpCommand, false)
+        ]
+        });
     }
 }

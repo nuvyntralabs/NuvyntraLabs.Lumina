@@ -1,26 +1,26 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Civic;
 
-public sealed class EventsPage : LuminaPage
+public sealed class EventsPage : ContentPage
 {
-    public EventsPage(EventsViewModel vm) : base("Events", "Civic Pulse", "This week on the square.")
+    public EventsPage(EventsViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = CivicSeed.Items.Where(x => x.Group == "Events").ToList();
-        if (rows.Count == 0)
+        Title = "Events";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = CivicUi.List(new CivicModel
         {
-            rows = CivicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("EventDetail", vm.OpenEventDetailCommand, NVButtonVariant.Filled);        AddAction("Booking", vm.OpenBookingCommand, NVButtonVariant.Outline);
+            Title = "Events",
+            Subtitle = "This week on the square.",
+            Items = SeedRows.For(CivicSeed.Items, "Events"),
+            Kind = "events",
+            Actions =
+            [
+                new CivicNav("Event", vm.OpenEventDetailCommand, true, "icon_calendar"),
+                new CivicNav("Booking", vm.OpenBookingCommand, false, "icon_calendar", "Reserve a stall or court")
+            ]
+        });
     }
 }

@@ -1,28 +1,26 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Market;
 
-public sealed class SignInPage : LuminaPage
+public sealed class SignInPage : ContentPage
 {
-    public SignInPage(SignInViewModel vm) : base("SignIn", "Lumina Market", "Staff and members use the same gate.")
+    public SignInPage(SignInViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = MarketSeed.Items.Where(x => x.Group == "SignIn").ToList();
-        if (rows.Count == 0)
+        Title = "Welcome back";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = MarketUi.Auth(new MarketModel
         {
-            rows = MarketSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-Root.Add(new NVTextField { Label = "Email" });
-        Root.Add(new NVTextField { Label = "Password", IsPassword = true });
-        AddAction("Sign in", vm.SignInCommand);        AddAction("Continue", vm.OpenHomeCommand, NVButtonVariant.Filled);        AddAction("SignUp", vm.OpenSignUpCommand, NVButtonVariant.Outline);        AddAction("ForgotPassword", vm.OpenForgotPasswordCommand, NVButtonVariant.Outline);
+            Title = "Welcome back",
+            Subtitle = "Staff and members use the same gate.",
+            Items = SeedRows.For(MarketSeed.Items, "SignIn"),
+            Actions = [
+            new MarketNav("Sign in", vm.SignInCommand, true),
+            new MarketNav("Continue", vm.OpenHomeCommand, false),
+            new MarketNav("Create account", vm.OpenSignUpCommand, false),
+            new MarketNav("Forgot password?", vm.OpenForgotPasswordCommand, false)
+        ]
+        });
     }
 }

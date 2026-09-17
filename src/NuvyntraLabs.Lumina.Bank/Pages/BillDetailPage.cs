@@ -1,26 +1,26 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Bank;
 
-public sealed class BillDetailPage : LuminaPage
+public sealed class BillDetailPage : ContentPage
 {
-    public BillDetailPage(BillDetailViewModel vm) : base("BillDetail", "Aether Bank", "Council tax — September.")
+    public BillDetailPage(BillDetailViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = BankSeed.Items.Where(x => x.Group == "BillDetail").ToList();
-        if (rows.Count == 0)
+        Title = "Council tax";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = BankUi.Detail(new BankModel
         {
-            rows = BankSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Bills", vm.OpenBillsCommand, NVButtonVariant.Filled);        AddAction("Transfer", vm.OpenTransferCommand, NVButtonVariant.Outline);
+            Title = "Council tax",
+            Subtitle = "Harbour borough  ·  September",
+            Items = SeedRows.For(BankSeed.Items, "BillDetail"),
+            Kind = "bill",
+            Actions =
+            [
+                new BankNav("Pay now", vm.OpenTransferCommand, true, "icon_send"),
+                new BankNav("All bills", vm.OpenBillsCommand, false, "icon_bill")
+            ]
+        });
     }
 }

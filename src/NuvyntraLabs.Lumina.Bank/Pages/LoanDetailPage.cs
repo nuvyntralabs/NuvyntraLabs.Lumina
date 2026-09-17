@@ -1,26 +1,26 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Bank;
 
-public sealed class LoanDetailPage : LuminaPage
+public sealed class LoanDetailPage : ContentPage
 {
-    public LoanDetailPage(LoanDetailViewModel vm) : base("LoanDetail", "Aether Bank", "Studio loan — 4.2% APR.")
+    public LoanDetailPage(LoanDetailViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = BankSeed.Items.Where(x => x.Group == "LoanDetail").ToList();
-        if (rows.Count == 0)
+        Title = "Studio loan";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = BankUi.Detail(new BankModel
         {
-            rows = BankSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Loans", vm.OpenLoansCommand, NVButtonVariant.Filled);        AddAction("Transfer", vm.OpenTransferCommand, NVButtonVariant.Outline);
+            Title = "Studio loan",
+            Subtitle = "4.2% APR  ·  ends Apr 2029",
+            Items = SeedRows.For(BankSeed.Items, "LoanDetail"),
+            Kind = "loan",
+            Actions =
+            [
+                new BankNav("Make a payment", vm.OpenTransferCommand, true, "icon_send"),
+                new BankNav("All credit", vm.OpenLoansCommand, false, "icon_loan")
+            ]
+        });
     }
 }

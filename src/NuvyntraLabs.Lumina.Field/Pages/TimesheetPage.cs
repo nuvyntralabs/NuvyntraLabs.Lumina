@@ -1,26 +1,24 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Field;
 
-public sealed class TimesheetPage : LuminaPage
+public sealed class TimesheetPage : ContentPage
 {
-    public TimesheetPage(TimesheetViewModel vm) : base("Timesheet", "Harbor Field", "Tuesday hours.")
+    public TimesheetPage(TimesheetViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = FieldSeed.Items.Where(x => x.Group == "Timesheet").ToList();
-        if (rows.Count == 0)
+        Title = "Timesheet";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = FieldUi.Form(new FieldModel
         {
-            rows = FieldSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Dashboard", vm.OpenDashboardCommand, NVButtonVariant.Filled);        AddAction("Jobs", vm.OpenJobsCommand, NVButtonVariant.Outline);
+            Title = "Timesheet",
+            Subtitle = "Tuesday hours.",
+            Items = SeedRows.For(FieldSeed.Items, "Timesheet"),
+            Actions = [
+            new FieldNav("Continue", vm.OpenDashboardCommand, true),
+            new FieldNav("Jobs", vm.OpenJobsCommand, false)
+        ]
+        });
     }
 }

@@ -1,26 +1,26 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Bank;
 
-public sealed class InvestDetailPage : LuminaPage
+public sealed class InvestDetailPage : ContentPage
 {
-    public InvestDetailPage(InvestDetailViewModel vm) : base("InvestDetail", "Aether Bank", "Aurora 80 — global equity tilt.")
+    public InvestDetailPage(InvestDetailViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = BankSeed.Items.Where(x => x.Group == "InvestDetail").ToList();
-        if (rows.Count == 0)
+        Title = "Aurora 80";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = BankUi.Detail(new BankModel
         {
-            rows = BankSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Invest", vm.OpenInvestCommand, NVButtonVariant.Filled);        AddAction("Statements", vm.OpenStatementsCommand, NVButtonVariant.Outline);
+            Title = "Aurora 80",
+            Subtitle = "Global equity tilt  ·  accumulating",
+            Items = SeedRows.For(BankSeed.Items, "InvestDetail"),
+            Kind = "invest",
+            Actions =
+            [
+                new BankNav("All holdings", vm.OpenInvestCommand, true, "icon_chart"),
+                new BankNav("Statements", vm.OpenStatementsCommand, false, "icon_statement")
+            ]
+        });
     }
 }

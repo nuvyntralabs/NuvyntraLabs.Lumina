@@ -1,26 +1,23 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Market;
 
-public sealed class StoreLocatorPage : LuminaPage
+public sealed class StoreLocatorPage : ContentPage
 {
-    public StoreLocatorPage(StoreLocatorViewModel vm) : base("StoreLocator", "Lumina Market", "Studios that still have stock.")
+    public StoreLocatorPage(StoreLocatorViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = MarketSeed.Items.Where(x => x.Group == "StoreLocator").ToList();
-        if (rows.Count == 0)
+        Title = "Store locator";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = MarketUi.List(new MarketModel
         {
-            rows = MarketSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Catalog", vm.OpenCatalogCommand, NVButtonVariant.Filled);
+            Title = "Store locator",
+            Subtitle = "Studios that still have stock.",
+            Items = SeedRows.For(MarketSeed.Items, "StoreLocator"),
+            Actions = [
+            new MarketNav("Shop", vm.OpenCatalogCommand, true)
+        ]
+        });
     }
 }

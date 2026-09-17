@@ -1,26 +1,24 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Clinic;
 
-public sealed class NotificationsPage : LuminaPage
+public sealed class NotificationsPage : ContentPage
 {
-    public NotificationsPage(NotificationsViewModel vm) : base("Notifications", "Nuvexa Clinic", "Reminders.")
+    public NotificationsPage(NotificationsViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = ClinicSeed.Items.Where(x => x.Group == "Notifications").ToList();
-        if (rows.Count == 0)
+        Title = "Notifications";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = ClinicUi.List(new ClinicModel
         {
-            rows = ClinicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Appointments", vm.OpenAppointmentsCommand, NVButtonVariant.Filled);
+            Title = "Notifications",
+            Subtitle = "Reminders.",
+            Items = SeedRows.For(ClinicSeed.Items, "Notifications"),
+            Kind = "notifications",
+            Actions = [
+            new ClinicNav("Visits", vm.OpenAppointmentsCommand, true)
+        ]
+        });
     }
 }

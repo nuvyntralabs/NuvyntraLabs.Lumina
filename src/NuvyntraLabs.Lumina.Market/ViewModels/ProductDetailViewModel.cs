@@ -20,6 +20,10 @@ public partial class ProductDetailViewModel : PageViewModel
     [AsyncModelCommand]
     private Task OpenCartAsync(CancellationToken cancellationToken)
         => Navigator!.NavigateToAsync<CartViewModel>(cancellationToken);
+
+    [AsyncModelCommand]
+    private Task OpenCheckoutAsync(CancellationToken cancellationToken)
+        => Navigator!.NavigateToAsync<CheckoutViewModel>(cancellationToken);
     [AsyncModelCommand]
     private Task OpenWishlistAsync(CancellationToken cancellationToken)
         => Navigator!.NavigateToAsync<WishlistViewModel>(cancellationToken);

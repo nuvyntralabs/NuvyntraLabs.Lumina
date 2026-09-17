@@ -1,26 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Market;
 
-public sealed class CategoriesPage : LuminaPage
+public sealed class CategoriesPage : ContentPage
 {
-    public CategoriesPage(CategoriesViewModel vm) : base("Categories", "Lumina Market", "Aisles you actually walk.")
+    public CategoriesPage(CategoriesViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = MarketSeed.Items.Where(x => x.Group == "Categories").ToList();
-        if (rows.Count == 0)
+        Title = "All categories";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = MarketUi.List(new MarketModel
         {
-            rows = MarketSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Catalog", vm.OpenCatalogCommand, NVButtonVariant.Filled);        AddAction("Search", vm.OpenSearchCommand, NVButtonVariant.Outline);
+            Title = "All categories",
+            Subtitle = "Aisles you actually walk.",
+            Items = SeedRows.For(MarketSeed.Items, "Categories"),
+            Kind = "aisles",
+            Actions = [
+            new MarketNav("Shop", vm.OpenCatalogCommand, true),
+            new MarketNav("Search", vm.OpenSearchCommand, false)
+        ]
+        });
     }
 }

@@ -1,26 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Clinic;
 
-public sealed class InsurancePage : LuminaPage
+public sealed class InsurancePage : ContentPage
 {
-    public InsurancePage(InsuranceViewModel vm) : base("Insurance", "Nuvexa Clinic", "Nuvexa Care · member 8841.")
+    public InsurancePage(InsuranceViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = ClinicSeed.Items.Where(x => x.Group == "Insurance").ToList();
-        if (rows.Count == 0)
+        Title = "Insurance";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = ClinicUi.Detail(new ClinicModel
         {
-            rows = ClinicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Settings", vm.OpenSettingsCommand, NVButtonVariant.Filled);
+            Title = "Insurance",
+            Subtitle = "Nuvexa Care · member 8841.",
+            Items = SeedRows.For(ClinicSeed.Items, "Insurance"),
+            Kind = "insurance",
+            Actions =
+            [
+                new ClinicNav("Account", vm.OpenSettingsCommand, true, "icon_user")
+            ]
+        });
     }
 }

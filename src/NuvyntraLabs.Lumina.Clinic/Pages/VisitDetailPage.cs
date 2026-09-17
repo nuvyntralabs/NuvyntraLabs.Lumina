@@ -1,26 +1,27 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Clinic;
 
-public sealed class VisitDetailPage : LuminaPage
+public sealed class VisitDetailPage : ContentPage
 {
-    public VisitDetailPage(VisitDetailViewModel vm) : base("VisitDetail", "Nuvexa Clinic", "Follow-up after lipid panel.")
+    public VisitDetailPage(VisitDetailViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = ClinicSeed.Items.Where(x => x.Group == "VisitDetail").ToList();
-        if (rows.Count == 0)
+        Title = "Visit";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = ClinicUi.Detail(new ClinicModel
         {
-            rows = ClinicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Prescriptions", vm.OpenPrescriptionsCommand, NVButtonVariant.Filled);        AddAction("Documents", vm.OpenDocumentsCommand, NVButtonVariant.Outline);        AddAction("Invoice", vm.OpenInvoiceCommand, NVButtonVariant.Outline);
+            Title = "Visit",
+            Subtitle = "Follow-up after lipid panel.",
+            Items = SeedRows.For(ClinicSeed.Items, "VisitDetail"),
+            Kind = "visit",
+            Actions =
+            [
+                new ClinicNav("Prescriptions", vm.OpenPrescriptionsCommand, true, "icon_pill"),
+                new ClinicNav("Documents", vm.OpenDocumentsCommand, false, "icon_doc"),
+                new ClinicNav("Invoice", vm.OpenInvoiceCommand, false, "icon_doc")
+            ]
+        });
     }
 }

@@ -1,28 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Civic;
 
-public sealed class SignInPage : LuminaPage
+public sealed class SignInPage : ContentPage
 {
-    public SignInPage(SignInViewModel vm) : base("SignIn", "Civic Pulse", "Resident pass.")
+    public SignInPage(SignInViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = CivicSeed.Items.Where(x => x.Group == "SignIn").ToList();
-        if (rows.Count == 0)
+        Title = "Welcome back";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = CivicUi.Auth(new CivicModel
         {
-            rows = CivicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-Root.Add(new NVTextField { Label = "Email" });
-        Root.Add(new NVTextField { Label = "Password", IsPassword = true });
-        AddAction("Sign in", vm.SignInCommand);        AddAction("Continue", vm.OpenHomeCommand, NVButtonVariant.Filled);
+            Title = "Welcome back",
+            Subtitle = "Sign in with your resident pass.",
+            Items = SeedRows.For(CivicSeed.Items, "SignIn"),
+            Actions =
+            [
+                new CivicNav("Sign in", vm.SignInCommand, true),
+                new CivicNav("Continue as Ada", vm.OpenHomeCommand, false)
+            ]
+        });
     }
 }

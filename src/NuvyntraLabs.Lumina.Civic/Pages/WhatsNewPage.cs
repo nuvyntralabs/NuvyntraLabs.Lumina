@@ -1,26 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Civic;
 
-public sealed class WhatsNewPage : LuminaPage
+public sealed class WhatsNewPage : ContentPage
 {
-    public WhatsNewPage(WhatsNewViewModel vm) : base("WhatsNew", "Civic Pulse", "1.0 prototype notes.")
+    public WhatsNewPage(WhatsNewViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = CivicSeed.Items.Where(x => x.Group == "WhatsNew").ToList();
-        if (rows.Count == 0)
+        Title = "Whats new";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = CivicUi.List(new CivicModel
         {
-            rows = CivicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("About", vm.OpenAboutCommand, NVButtonVariant.Filled);
+            Title = "Whats new",
+            Subtitle = "1.0 prototype notes.",
+            Items = SeedRows.For(CivicSeed.Items, "WhatsNew"),
+            Kind = "whatsnew",
+            Actions =
+            [
+                new CivicNav("About", vm.OpenAboutCommand, true, "icon_council")
+            ]
+        });
     }
 }

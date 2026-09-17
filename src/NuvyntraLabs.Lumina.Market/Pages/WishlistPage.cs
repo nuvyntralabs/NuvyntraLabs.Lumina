@@ -1,26 +1,24 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Market;
 
-public sealed class WishlistPage : LuminaPage
+public sealed class WishlistPage : ContentPage
 {
-    public WishlistPage(WishlistViewModel vm) : base("Wishlist", "Lumina Market", "Saved for later.")
+    public WishlistPage(WishlistViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = MarketSeed.Items.Where(x => x.Group == "Wishlist").ToList();
-        if (rows.Count == 0)
+        Title = "Wishlist";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = MarketUi.Catalog(new MarketModel
         {
-            rows = MarketSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("ProductDetail", vm.OpenProductDetailCommand, NVButtonVariant.Filled);        AddAction("Cart", vm.OpenCartCommand, NVButtonVariant.Outline);
+            Title = "Wishlist",
+            Subtitle = "Saved for later.",
+            Items = SeedRows.For(MarketSeed.Items, "Wishlist"),
+            Actions = [
+            new MarketNav("View item", vm.OpenProductDetailCommand, true),
+            new MarketNav("Cart", vm.OpenCartCommand, false)
+        ]
+        });
     }
 }

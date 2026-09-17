@@ -1,26 +1,27 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Bank;
 
-public sealed class AccountDetailPage : LuminaPage
+public sealed class AccountDetailPage : ContentPage
 {
-    public AccountDetailPage(AccountDetailViewModel vm) : base("AccountDetail", "Aether Bank", "Current 40-88-41.")
+    public AccountDetailPage(AccountDetailViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = BankSeed.Items.Where(x => x.Group == "AccountDetail").ToList();
-        if (rows.Count == 0)
+        Title = "Current · 8841";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = BankUi.Detail(new BankModel
         {
-            rows = BankSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Transfer", vm.OpenTransferCommand, NVButtonVariant.Filled);        AddAction("Statements", vm.OpenStatementsCommand, NVButtonVariant.Outline);        AddAction("Invoice", vm.OpenInvoiceCommand, NVButtonVariant.Outline);
+            Title = "Current · 8841",
+            Subtitle = "Sort 40-88-41  ·  Ada Cole",
+            Items = SeedRows.For(BankSeed.Items, "AccountDetail"),
+            Kind = "account",
+            Actions =
+            [
+                new BankNav("Send from this account", vm.OpenTransferCommand, true, "icon_send"),
+                new BankNav("Statements", vm.OpenStatementsCommand, false, "icon_statement"),
+                new BankNav("Advice note", vm.OpenInvoiceCommand, false, "icon_statement")
+            ]
+        });
     }
 }

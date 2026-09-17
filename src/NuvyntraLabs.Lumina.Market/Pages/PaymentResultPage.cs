@@ -1,26 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Market;
 
-public sealed class PaymentResultPage : LuminaPage
+public sealed class PaymentResultPage : ContentPage
 {
-    public PaymentResultPage(PaymentResultViewModel vm) : base("PaymentResult", "Lumina Market", "Paid. Courier is packing.")
+    public PaymentResultPage(PaymentResultViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = MarketSeed.Items.Where(x => x.Group == "PaymentResult").ToList();
-        if (rows.Count == 0)
+        Title = "Order placed";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = MarketUi.Result(new MarketModel
         {
-            rows = MarketSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Tracking", vm.OpenTrackingCommand, NVButtonVariant.Filled);        AddAction("Orders", vm.OpenOrdersCommand, NVButtonVariant.Outline);        AddAction("Receipt", vm.OpenReceiptCommand, NVButtonVariant.Outline);
+            Title = "Order placed",
+            Subtitle = "Paid. Courier is packing.",
+            Items = SeedRows.For(MarketSeed.Items, "PaymentResult"),
+            Actions = [
+            new MarketNav("Track order", vm.OpenTrackingCommand, true),
+            new MarketNav("Orders", vm.OpenOrdersCommand, false),
+            new MarketNav("Receipt", vm.OpenReceiptCommand, false)
+        ]
+        });
     }
 }

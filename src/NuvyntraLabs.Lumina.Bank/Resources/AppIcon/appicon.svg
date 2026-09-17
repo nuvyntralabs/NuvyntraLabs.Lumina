@@ -1,4 +1,4 @@
 <svg width="456" height="456" viewBox="0 0 456 456" xmlns="http://www.w3.org/2000/svg">
-  <rect width="456" height="456" rx="96" fill="#3D4A8F"/>
-  <text x="228" y="280" text-anchor="middle" font-size="180" font-family="sans-serif" fill="#FFFCF7">A</text>
+  <rect width="456" height="456" rx="96" fill="#6B1E3C"/>
+  <path fill="#C9A227" d="M228 96 318 360h-34l-18-52H190l-18 52h-34L228 96Zm0 78-26 72h52l-26-72Z"/>
 </svg>

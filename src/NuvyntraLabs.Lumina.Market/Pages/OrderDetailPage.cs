@@ -1,26 +1,26 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Market;
 
-public sealed class OrderDetailPage : LuminaPage
+public sealed class OrderDetailPage : ContentPage
 {
-    public OrderDetailPage(OrderDetailViewModel vm) : base("OrderDetail", "Lumina Market", "Harbour ramen + pears.")
+    public OrderDetailPage(OrderDetailViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = MarketSeed.Items.Where(x => x.Group == "OrderDetail").ToList();
-        if (rows.Count == 0)
+        Title = "Order detail";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = MarketUi.List(new MarketModel
         {
-            rows = MarketSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Tracking", vm.OpenTrackingCommand, NVButtonVariant.Filled);        AddAction("Invoice", vm.OpenInvoiceCommand, NVButtonVariant.Outline);        AddAction("Receipt", vm.OpenReceiptCommand, NVButtonVariant.Outline);        AddAction("SellerChat", vm.OpenSellerChatCommand, NVButtonVariant.Outline);
+            Title = "Order detail",
+            Subtitle = "Harbour ramen + pears.",
+            Items = SeedRows.For(MarketSeed.Items, "OrderDetail"),
+            Actions = [
+            new MarketNav("Track order", vm.OpenTrackingCommand, true),
+            new MarketNav("Invoice", vm.OpenInvoiceCommand, false),
+            new MarketNav("Receipt", vm.OpenReceiptCommand, false),
+            new MarketNav("Message kitchen", vm.OpenSellerChatCommand, false)
+        ]
+        });
     }
 }

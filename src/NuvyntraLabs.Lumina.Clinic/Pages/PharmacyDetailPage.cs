@@ -1,26 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Clinic;
 
-public sealed class PharmacyDetailPage : LuminaPage
+public sealed class PharmacyDetailPage : ContentPage
 {
-    public PharmacyDetailPage(PharmacyDetailViewModel vm) : base("PharmacyDetail", "Nuvexa Clinic", "Atorvastatin 10 mg film-coated.")
+    public PharmacyDetailPage(PharmacyDetailViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = ClinicSeed.Items.Where(x => x.Group == "PharmacyDetail").ToList();
-        if (rows.Count == 0)
+        Title = "Atorvastatin";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = ClinicUi.Detail(new ClinicModel
         {
-            rows = ClinicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Pharmacy", vm.OpenPharmacyCommand, NVButtonVariant.Filled);
+            Title = "Atorvastatin",
+            Subtitle = "Atorvastatin 10 mg film-coated.",
+            Items = SeedRows.For(ClinicSeed.Items, "PharmacyDetail"),
+            Kind = "pharmacy",
+            Actions =
+            [
+                new ClinicNav("Pharmacy", vm.OpenPharmacyCommand, true, "icon_pill")
+            ]
+        });
     }
 }

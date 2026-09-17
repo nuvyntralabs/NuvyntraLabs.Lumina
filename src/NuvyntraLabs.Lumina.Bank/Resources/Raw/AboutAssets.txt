@@ -1,1 +1,1 @@
-Aether Bank — Lumina prototype. Static seed in NuvexaDB.
+Aether Bank — Luminia Playground prototype. Static seed in NuvexaDB.

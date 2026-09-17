@@ -1,26 +1,24 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Market;
 
-public sealed class SignUpPage : LuminaPage
+public sealed class SignUpPage : ContentPage
 {
-    public SignUpPage(SignUpViewModel vm) : base("SignUp", "Lumina Market", "Create a Market account.")
+    public SignUpPage(SignUpViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = MarketSeed.Items.Where(x => x.Group == "SignUp").ToList();
-        if (rows.Count == 0)
+        Title = "Create your account";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = MarketUi.Auth(new MarketModel
         {
-            rows = MarketSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("SignIn", vm.OpenSignInCommand, NVButtonVariant.Filled);        AddAction("ProfileSetup", vm.OpenProfileSetupCommand, NVButtonVariant.Outline);
+            Title = "Create your account",
+            Subtitle = "Create a Market account.",
+            Items = SeedRows.For(MarketSeed.Items, "SignUp"),
+            Actions = [
+            new MarketNav("Sign in", vm.OpenSignInCommand, true),
+            new MarketNav("Save profile", vm.OpenProfileSetupCommand, false)
+        ]
+        });
     }
 }

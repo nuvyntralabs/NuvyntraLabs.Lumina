@@ -1,26 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Field;
 
-public sealed class RoutePage : LuminaPage
+public sealed class RoutePage : ContentPage
 {
-    public RoutePage(RouteViewModel vm) : base("Route", "Harbor Field", "Van plan.")
+    public RoutePage(RouteViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = FieldSeed.Items.Where(x => x.Group == "Route").ToList();
-        if (rows.Count == 0)
+        Title = "Route";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = FieldUi.List(new FieldModel
         {
-            rows = FieldSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Jobs", vm.OpenJobsCommand, NVButtonVariant.Filled);        AddAction("Geofences", vm.OpenGeofencesCommand, NVButtonVariant.Outline);
+            Title = "Route",
+            Subtitle = "Van plan.",
+            Items = SeedRows.For(FieldSeed.Items, "Route"),
+            Kind = "route",
+            Actions = [
+            new FieldNav("Jobs", vm.OpenJobsCommand, true),
+            new FieldNav("Geofences", vm.OpenGeofencesCommand, false)
+        ]
+        });
     }
 }

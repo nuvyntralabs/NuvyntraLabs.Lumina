@@ -1,26 +1,24 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Field;
 
-public sealed class NotificationsPage : LuminaPage
+public sealed class NotificationsPage : ContentPage
 {
-    public NotificationsPage(NotificationsViewModel vm) : base("Notifications", "Harbor Field", "Dispatch.")
+    public NotificationsPage(NotificationsViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = FieldSeed.Items.Where(x => x.Group == "Notifications").ToList();
-        if (rows.Count == 0)
+        Title = "Notifications";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = FieldUi.List(new FieldModel
         {
-            rows = FieldSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Jobs", vm.OpenJobsCommand, NVButtonVariant.Filled);
+            Title = "Notifications",
+            Subtitle = "Dispatch.",
+            Items = SeedRows.For(FieldSeed.Items, "Notifications"),
+            Kind = "notifications",
+            Actions = [
+            new FieldNav("Jobs", vm.OpenJobsCommand, true)
+        ]
+        });
     }
 }

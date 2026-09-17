@@ -1,26 +1,24 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Market;
 
-public sealed class HelpPage : LuminaPage
+public sealed class HelpPage : ContentPage
 {
-    public HelpPage(HelpViewModel vm) : base("Help", "Lumina Market", "How Market works.")
+    public HelpPage(HelpViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = MarketSeed.Items.Where(x => x.Group == "Help").ToList();
-        if (rows.Count == 0)
+        Title = "Help";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = MarketUi.List(new MarketModel
         {
-            rows = MarketSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Settings", vm.OpenSettingsCommand, NVButtonVariant.Filled);
+            Title = "Help",
+            Subtitle = "How Market works.",
+            Items = SeedRows.For(MarketSeed.Items, "Help"),
+            Kind = "help",
+            Actions = [
+            new MarketNav("You", vm.OpenSettingsCommand, true)
+        ]
+        });
     }
 }

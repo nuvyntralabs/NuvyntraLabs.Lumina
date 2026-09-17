@@ -1,26 +1,27 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Clinic;
 
-public sealed class DoctorProfilePage : LuminaPage
+public sealed class DoctorProfilePage : ContentPage
 {
-    public DoctorProfilePage(DoctorProfileViewModel vm) : base("DoctorProfile", "Nuvexa Clinic", "Dr. Priya Iyer — cardiology.")
+    public DoctorProfilePage(DoctorProfileViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = ClinicSeed.Items.Where(x => x.Group == "DoctorProfile").ToList();
-        if (rows.Count == 0)
+        Title = "Dr. Priya Iyer";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = ClinicUi.Profile(new ClinicModel
         {
-            rows = ClinicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Booking", vm.OpenBookingCommand, NVButtonVariant.Filled);        AddAction("Inbox", vm.OpenInboxCommand, NVButtonVariant.Outline);
+            Title = "Dr. Priya Iyer",
+            Subtitle = "Cardiology at Harbour Heart.",
+            Items = SeedRows.For(ClinicSeed.Items, "DoctorProfile"),
+            Kind = "profile",
+            Actions =
+            [
+                new ClinicNav("Book clinic visit", vm.OpenBookingCommand, true, "icon_calendar"),
+                new ClinicNav("Video consult", vm.OpenInCallCommand, false, "icon_video"),
+                new ClinicNav("Inbox", vm.OpenInboxCommand, false, "icon_chat")
+            ]
+        });
     }
 }

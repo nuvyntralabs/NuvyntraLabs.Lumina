@@ -1,31 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Clinic;
 
-public sealed class ConversationPage : LuminaPage
+public sealed class ConversationPage : ContentPage
 {
-    public ConversationPage(ConversationViewModel vm) : base("Conversation", "Nuvexa Clinic", "Thread with Dr. Iyer.")
+    public ConversationPage(ConversationViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = ClinicSeed.Items.Where(x => x.Group == "Conversation").ToList();
-        if (rows.Count == 0)
+        Title = "Conversation";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = ClinicUi.Chat(new ClinicModel
         {
-            rows = ClinicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        Root.Add(new NVChat
-        {
-            Messages = rows.Select(r => new NVChatMessage { Author = r.Title, Text = r.Subtitle }).ToList()
+            Title = "Dr. Iyer",
+            Subtitle = "Thread with Dr. Iyer.",
+            Items = SeedRows.For(ClinicSeed.Items, "Conversation"),
+            Kind = "chat",
+            Actions = [
+            new ClinicNav("Inbox", vm.OpenInboxCommand, true),
+            new ClinicNav("Join call", vm.OpenInCallCommand, false)
+        ]
         });
-
-        
-AddAction("Inbox", vm.OpenInboxCommand, NVButtonVariant.Filled);        AddAction("InCall", vm.OpenInCallCommand, NVButtonVariant.Outline);
     }
 }

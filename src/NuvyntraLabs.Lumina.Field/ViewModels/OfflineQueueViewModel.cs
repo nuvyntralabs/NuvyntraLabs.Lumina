@@ -10,18 +10,36 @@ namespace NuvyntraLabs.Lumina.Field;
 [Route("offlinequeue")]
 public partial class OfflineQueueViewModel : PageViewModel
 {
-
     public OfflineQueueViewModel(INavigator navigator, IDialogs dialogs)
         : base(navigator, dialogs)
     {
-
     }
+
+    [AsyncModelCommand]
+    private Task OpenHomeAsync(CancellationToken cancellationToken)
+        => Navigator!.ResetAsync<HomeViewModel>(cancellationToken);
+
+    [AsyncModelCommand]
+    private Task OpenJobsAsync(CancellationToken cancellationToken)
+        => Navigator!.ResetAsync<JobsViewModel>(cancellationToken);
+
+    [AsyncModelCommand]
+    private Task OpenAssetsAsync(CancellationToken cancellationToken)
+        => Navigator!.ResetAsync<AssetsViewModel>(cancellationToken);
+
+    [AsyncModelCommand]
+    private Task OpenOfflineQueueAsync(CancellationToken cancellationToken)
+        => Navigator!.ResetAsync<OfflineQueueViewModel>(cancellationToken);
+
+    [AsyncModelCommand]
+    private Task OpenSettingsAsync(CancellationToken cancellationToken)
+        => Navigator!.ResetAsync<SettingsViewModel>(cancellationToken);
 
     [AsyncModelCommand]
     private Task OpenConflictsAsync(CancellationToken cancellationToken)
         => Navigator!.NavigateToAsync<ConflictsViewModel>(cancellationToken);
+
     [AsyncModelCommand]
     private Task OpenEvidenceAsync(CancellationToken cancellationToken)
         => Navigator!.NavigateToAsync<EvidenceViewModel>(cancellationToken);
-
 }

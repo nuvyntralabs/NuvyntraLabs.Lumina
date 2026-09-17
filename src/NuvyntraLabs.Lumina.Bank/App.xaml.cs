@@ -14,13 +14,17 @@ public partial class App : Application
         InitializeComponent();
         _services = services;
         NVTheme.Current.UseLumina();
-        NVTheme.Current.SetAccent(Color.FromArgb("#3D4A8F"));
+        NVTheme.Current.SetAccent(Color.FromArgb("#6B1E3C"));
         NVTheme.Current.SetMode(NVThemeMode.Light);
         _ = SeedAsync();
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
-        => new(new NavigationPage(_services.GetRequiredService<SignInPage>()));
+        => new(new NavigationPage(_services.GetRequiredService<SignInPage>())
+        {
+            BarBackgroundColor = Color.FromArgb("#6B1E3C"),
+            BarTextColor = Colors.White
+        });
 
     static async Task SeedAsync()
     {

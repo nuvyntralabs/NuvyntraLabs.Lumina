@@ -1,26 +1,23 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Market;
 
-public sealed class ReviewsPage : LuminaPage
+public sealed class ReviewsPage : ContentPage
 {
-    public ReviewsPage(ReviewsViewModel vm) : base("Reviews", "Lumina Market", "Stars plus a short note.")
+    public ReviewsPage(ReviewsViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = MarketSeed.Items.Where(x => x.Group == "Reviews").ToList();
-        if (rows.Count == 0)
+        Title = "Reviews";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = MarketUi.List(new MarketModel
         {
-            rows = MarketSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("ProductDetail", vm.OpenProductDetailCommand, NVButtonVariant.Filled);
+            Title = "Reviews",
+            Subtitle = "Stars plus a short note.",
+            Items = SeedRows.For(MarketSeed.Items, "Reviews"),
+            Actions = [
+            new MarketNav("View item", vm.OpenProductDetailCommand, true)
+        ]
+        });
     }
 }

@@ -7,7 +7,7 @@ public static class MarketSeed
     public static IReadOnlyList<CatalogItem> Items { get; } =
     [
             new CatalogItem { Id = "market-001", Title = "Welcome to Market", Subtitle = "Groceries, plates, and pantry in one aisle.", Group = "Walkthrough" },
-            new CatalogItem { Id = "market-002", Title = "Same-day slots", Subtitle = " couriers from Harbour Studio.", Group = "Walkthrough" },
+            new CatalogItem { Id = "market-002", Title = "Same-day slots", Subtitle = "Couriers from Harbour Studio.", Group = "Walkthrough" },
             new CatalogItem { Id = "market-003", Title = "Pay once", Subtitle = "Cards, wallet, or kitchen tab.", Group = "Walkthrough" },
             new CatalogItem { Id = "market-004", Title = "Email", Subtitle = "demo@lumina.market", Group = "SignIn" },
             new CatalogItem { Id = "market-005", Title = "Password", Subtitle = "secret", Group = "SignIn" },

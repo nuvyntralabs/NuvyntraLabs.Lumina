@@ -1,26 +1,28 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Civic;
 
-public sealed class TransitPage : LuminaPage
+public sealed class TransitPage : ContentPage
 {
-    public TransitPage(TransitViewModel vm) : base("Transit", "Civic Pulse", "Live-looking times, static clock.")
+    public TransitPage(TransitViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = CivicSeed.Items.Where(x => x.Group == "Transit").ToList();
-        if (rows.Count == 0)
+        Title = "Transit";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = CivicUi.Transit(new CivicModel
         {
-            rows = CivicSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("TicketDetail", vm.OpenTicketDetailCommand, NVButtonVariant.Filled);        AddAction("Booking", vm.OpenBookingCommand, NVButtonVariant.Outline);
+            Title = "Transit",
+            Subtitle = "Live-looking times, static clock.",
+            Items = SeedRows.For(CivicSeed.Items, "Transit"),
+            Kind = "transit",
+            SelectedTab = "Transit",
+            Tabs = CivicTheme.Tabs(vm.OpenHomeCommand, vm.OpenServicesCommand, null, vm.OpenWalletCommand, vm.OpenSettingsCommand),
+            Actions =
+            [
+                new CivicNav("Ticket", vm.OpenTicketDetailCommand, true, "icon_ticket"),
+                new CivicNav("Booking", vm.OpenBookingCommand, false, "icon_calendar")
+            ]
+        });
     }
 }

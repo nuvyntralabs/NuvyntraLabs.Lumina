@@ -1,26 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Field;
 
-public sealed class GeofencesPage : LuminaPage
+public sealed class GeofencesPage : ContentPage
 {
-    public GeofencesPage(GeofencesViewModel vm) : base("Geofences", "Harbor Field", "Twenty circles max.")
+    public GeofencesPage(GeofencesViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = FieldSeed.Items.Where(x => x.Group == "Geofences").ToList();
-        if (rows.Count == 0)
+        Title = "Geofences";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = FieldUi.List(new FieldModel
         {
-            rows = FieldSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("Sites", vm.OpenSitesCommand, NVButtonVariant.Filled);        AddAction("Route", vm.OpenRouteCommand, NVButtonVariant.Outline);
+            Title = "Geofences",
+            Subtitle = "Twenty circles max.",
+            Items = SeedRows.For(FieldSeed.Items, "Geofences"),
+            Kind = "geofences",
+            Actions = [
+            new FieldNav("Sites", vm.OpenSitesCommand, true),
+            new FieldNav("Route", vm.OpenRouteCommand, false)
+        ]
+        });
     }
 }

@@ -1,26 +1,25 @@
 using NuvyntraLabs.Lumina.Core;
-using NuvyntraLabs.UIKit;
 
 namespace NuvyntraLabs.Lumina.Field;
 
-public sealed class ConflictsPage : LuminaPage
+public sealed class ConflictsPage : ContentPage
 {
-    public ConflictsPage(ConflictsViewModel vm) : base("Conflicts", "Harbor Field", "Offline write vs desk edit.")
+    public ConflictsPage(ConflictsViewModel vm)
     {
         ArgumentNullException.ThrowIfNull(vm);
         BindingContext = vm;
-        var rows = FieldSeed.Items.Where(x => x.Group == "Conflicts").ToList();
-        if (rows.Count == 0)
+        Title = "Conflicts";
+        NavigationPage.SetHasNavigationBar(this, false);
+        Content = FieldUi.List(new FieldModel
         {
-            rows = FieldSeed.Items.Take(3).ToList();
-        }
-
-        foreach (var row in rows)
-        {
-            AddCard(row.Title, row.Subtitle);
-        }
-
-        
-AddAction("OfflineQueue", vm.OpenOfflineQueueCommand, NVButtonVariant.Filled);        AddAction("JobDetail", vm.OpenJobDetailCommand, NVButtonVariant.Outline);
+            Title = "Conflicts",
+            Subtitle = "Offline write vs desk edit.",
+            Items = SeedRows.For(FieldSeed.Items, "Conflicts"),
+            Kind = "conflicts",
+            Actions = [
+            new FieldNav("Queue", vm.OpenOfflineQueueCommand, true),
+            new FieldNav("Job", vm.OpenJobDetailCommand, false)
+        ]
+        });
     }
 }
