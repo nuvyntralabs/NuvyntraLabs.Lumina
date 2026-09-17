@@ -3,7 +3,7 @@
 Five standalone .NET MAUI apps that show what the **Nuvexa Dev Ecosystem** can ship in a weekend: Lumina UI, MVVMExpress navigation, HttpForge contracts, and NuvexaDB via LocalStore. Static seed — no live backends.
 
 Hub folder: `LuminaPlayground/`  
-GitHub: [nuvyntralabs/NuvyntraLabs.Lumina](https://github.com/nuvyntralabs/NuvyntraLabs.LuminaPlayground)
+GitHub: [nuvyntralabs/NuvyntraLabs.LuminaPlayground](https://github.com/nuvyntralabs/NuvyntraLabs.LuminaPlayground)
 
 **130 screens** across five product heads. Same stack. Five different businesses.
 
