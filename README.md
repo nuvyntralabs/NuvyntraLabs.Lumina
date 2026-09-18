@@ -90,7 +90,7 @@ dotnet build src/NuvyntraLabs.Lumina.Market/NuvyntraLabs.Lumina.Market.csproj -f
 
 ## Stack
 
-- [NuvyntraLabs.UIKit](https://www.nuget.org/packages/NuvyntraLabs.UIKit) 1.5.0
+- [NuvyntraLabs.UIKit](https://www.nuget.org/packages/NuvyntraLabs.UIKit) 1.5.1
 - [Plugin.Maui.MVVMExpress](https://www.nuget.org/packages/Plugin.Maui.MVVMExpress) 1.3.0
 - [Plugin.Maui.HttpForge](https://www.nuget.org/packages/Plugin.Maui.HttpForge) 1.1.1
 - [Plugin.Maui.LocalStore](https://www.nuget.org/packages/Plugin.Maui.LocalStore) 1.1.0 + [Nuventra.NuvexaDB](https://www.nuget.org/packages/Nuventra.NuvexaDB)
